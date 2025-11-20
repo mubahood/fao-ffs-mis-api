@@ -830,25 +830,11 @@ class User extends Administrator implements JWTSubject
 
     /**
      * Check if user has valid membership
+     * For FAO FFS-MIS, all registered users have access (no membership subscription required)
      */
     public function hasValidMembership()
     {
-        // Admin users always have access
-        if ($this->isAdmin()) {
-            return true;
-        }
-
-        // Check if membership is paid
-        if (!$this->is_membership_paid) {
-            return false;
-        }
-
-        // Check expiry date if applicable
-        if ($this->membership_expiry_date) {
-            return $this->membership_expiry_date >= now();
-        }
-
-        // LIFE membership (no expiry)
+        // All users have access - no membership subscription required
         return true;
     }
 

@@ -1168,6 +1168,57 @@ class ApiResurceController extends Controller
         return $this->success($data, $message = "Success!", 200);
     }
 
+    /**
+     * Get all FFS groups for registration dropdown
+     * Returns active groups with essential information
+     */
+    public function ffs_groups(Request $r)
+    {
+        try {
+            $groups = \App\Models\FfsGroup::where('status', 'Active')
+                ->select([
+                    'id',
+                    'name',
+                    'code',
+                    'type',
+                    'district_id',
+                    'village',
+                    'total_members',
+                    'facilitator_id'
+                ])
+                ->orderBy('name', 'asc')
+                ->get();
+            
+            // Add computed fields
+            $groups->each(function($group) {
+                $group->type_text = $group->type_text ?? $group->type;
+                $group->district_name = $group->district_name ?? '';
+                $group->facilitator_name = $group->facilitator_name ?? '';
+            });
+            
+            return $this->success($groups, 'Groups retrieved successfully.', 200);
+        } catch (\Exception $e) {
+            return $this->error('Failed to retrieve groups: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get single FFS group details by ID
+     */
+    public function ffs_group_show(Request $r, $id)
+    {
+        try {
+            $group = \App\Models\FfsGroup::find($id);
+            
+            if (!$group) {
+                return $this->error('Group not found.');
+            }
+            
+            return $this->success($group, 'Group details retrieved successfully.', 200);
+        } catch (\Exception $e) {
+            return $this->error('Failed to retrieve group: ' . $e->getMessage());
+        }
+    }
 
     public function orders_create(Request $r)
     {

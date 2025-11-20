@@ -62,6 +62,38 @@ Route::post("search-history/clear", [ApiResurceController::class, "clear_search_
 Route::POST("users/login", [ApiAuthController::class, "login"]);
 Route::POST("users/register", [ApiAuthController::class, "register"]);
 
+// FFS Groups Management
+use App\Http\Controllers\FfsGroupController;
+
+Route::prefix('ffs-groups')->group(function () {
+    Route::get('/', [FfsGroupController::class, 'index']); // List all groups with filtering
+    Route::get('/form-options', [FfsGroupController::class, 'getFormOptions']); // Get dropdown options
+    Route::get('/subcounties/{districtId}', [FfsGroupController::class, 'getSubcounties']); // Get subcounties
+    Route::get('/parishes/{subcountyId}', [FfsGroupController::class, 'getParishes']); // Get parishes
+    Route::get('/{id}', [FfsGroupController::class, 'show']); // Get single group
+    Route::post('/', [FfsGroupController::class, 'store'])->middleware(EnsureTokenIsValid::class); // Create new group
+});
+
+// Members Management
+use App\Http\Controllers\MemberController;
+
+Route::prefix('members')->group(function () {
+    Route::get('/', [MemberController::class, 'index']); // List all members with filtering
+    Route::get('/{id}', [MemberController::class, 'show']); // Get single member
+    Route::post('/', [MemberController::class, 'store'])->middleware(EnsureTokenIsValid::class); // Register new member
+    Route::post('/{id}/send-credentials', [MemberController::class, 'sendCredentials'])->middleware(EnsureTokenIsValid::class); // Send credentials SMS
+    Route::post('/{id}/send-welcome', [MemberController::class, 'sendWelcomeMessage'])->middleware(EnsureTokenIsValid::class); // Send welcome SMS
+});
+
+// Locations (Districts, Subcounties, Parishes)
+use App\Http\Controllers\LocationController;
+
+Route::prefix('locations')->group(function () {
+    Route::get('/districts', [LocationController::class, 'getDistricts']); // Get all districts
+    Route::get('/subcounties/{districtId}', [LocationController::class, 'getSubcounties']); // Get subcounties by district
+    Route::get('/parishes/{subcountyId}', [LocationController::class, 'getParishes']); // Get parishes by subcounty
+});
+
 // Wishlist routes
 Route::get('wishlist_get', [ApiResurceController::class, 'wishlist_get']);
 Route::post('wishlist_add', [ApiResurceController::class, 'wishlist_add']);

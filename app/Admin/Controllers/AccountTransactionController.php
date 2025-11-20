@@ -19,6 +19,22 @@ class AccountTransactionController extends AdminController
     protected $title = 'Account Transactions';
 
     /**
+     * Get dynamic title based on URL
+     */
+    protected function title()
+    {
+        $url = request()->url();
+        
+        if (strpos($url, 'account-transactions-deposit') !== false) {
+            return 'Deposits';
+        } elseif (strpos($url, 'account-transactions-withdraw') !== false) {
+            return 'Withdrawals';
+        }
+        
+        return 'All Account Transactions';
+    }
+
+    /**
      * Make a grid builder.
      *
      * @return Grid
@@ -27,7 +43,19 @@ class AccountTransactionController extends AdminController
     {
         $grid = new Grid(new AccountTransaction());
         
-        $grid->model()->orderBy('transaction_date', 'desc');
+        // Detect transaction type from URL and filter accordingly
+        $url = request()->url();
+        
+        if (strpos($url, 'account-transactions-deposit') !== false) {
+            // Show only deposits (positive amounts)
+            $grid->model()->where('amount', '>', 0)->orderBy('transaction_date', 'desc');
+        } elseif (strpos($url, 'account-transactions-withdraw') !== false) {
+            // Show only withdrawals (negative amounts)
+            $grid->model()->where('amount', '<', 0)->orderBy('transaction_date', 'desc');
+        } else {
+            // Show all transactions
+            $grid->model()->orderBy('transaction_date', 'desc');
+        }
         $grid->disableExport();
         
         $grid->quickSearch('description')->placeholder('Search by description');

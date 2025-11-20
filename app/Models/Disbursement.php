@@ -41,8 +41,21 @@ class Disbursement extends Model
 
         // After creating a disbursement, create account transactions for investors
         static::created(function ($disbursement) {
+            // 1. Create negative project transaction to deduct disbursed amount from project
+            ProjectTransaction::create([
+                'project_id' => $disbursement->project_id,
+                'amount' => $disbursement->amount,
+                'transaction_date' => $disbursement->disbursement_date,
+                'type' => 'expense',
+                'source' => 'disbursement',
+                'description' => 'Profit disbursement to investors: ' . $disbursement->description,
+                'created_by_id' => $disbursement->created_by_id,
+            ]);
+            
+            // 2. Distribute to investors' accounts
             $disbursement->distributeToInvestors();
             
+            // 3. Recalculate project totals
             if ($disbursement->project_id) {
                 $project = Project::find($disbursement->project_id);
                 if ($project) {

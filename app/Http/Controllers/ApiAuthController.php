@@ -201,17 +201,16 @@ class ApiAuthController extends Controller
 
     public function register(Request $r)
     {
-        if ($r->email == null) {
-            return $this->error('Email address is required.');
+        if ($r->phone_number == null || empty(trim($r->phone_number))) {
+            return $this->error('Phone number is required.');
         }
 
-        //check if is valid email address
-        if (!filter_var($r->email, FILTER_VALIDATE_EMAIL)) {
-            return $this->error('Invalid email address. ' . $r->email);
-        } else {
-            $email = $r->email;
+        $phone_number = trim($r->phone_number);
+        
+        // Validate phone number length
+        if (strlen($phone_number) < 10) {
+            return $this->error('Phone number must be at least 10 digits.');
         }
-
 
         if ($r->password == null) {
             return $this->error('Password is required.');
@@ -221,29 +220,18 @@ class ApiAuthController extends Controller
             return $this->error('Name is required.');
         }
 
-        // Check for existing user with same email or phone
-        $existingUser = Administrator::where('email', $email)
-            ->orWhere('username', $email);
-        
-        // Check phone number if provided
-        if ($r->phone_number != null && !empty(trim($r->phone_number))) {
-            $existingUser = $existingUser->orWhere('phone_number', trim($r->phone_number));
-        }
+        // Check for existing user with same phone number
+        $existingUser = Administrator::where('phone_number', $phone_number)
+            ->orWhere('username', $phone_number);
         
         $u = $existingUser->first();
 
         if ($u != null) {
             if ($u->status == 'Deleted') {
-                return $this->error('Email for this account is deleted. Contact us for help.');
+                return $this->error('This phone number is associated with a deleted account. Contact us for help.');
             }
 
-            if ($u->email == $email) {
-                return $this->error('User with same Email address already exists.');
-            }
-            
-            if ($r->phone_number != null && $u->phone_number == trim($r->phone_number)) {
-                return $this->error('User with same Phone number already exists.');
-            }
+            return $this->error('User with this phone number already exists.');
         }
 
         $user = new Administrator();
@@ -270,25 +258,25 @@ class ApiAuthController extends Controller
         }
         
         $user->name = $name;
-        $user->username = $email;
-        $user->email = $email;
-        $user->reg_number = $email;
-        
-        // Set phone_number from request if provided
-        $user->phone_number = $r->phone_number != null ? trim($r->phone_number) : '';
+        $user->username = $phone_number;
+        $user->email = $phone_number . '@faoffsmis.org'; // Generate email from phone
+        $user->reg_number = $phone_number;
+        $user->phone_number = $phone_number;
         
         // Set address from request if provided
         $user->address = $r->address != null ? trim($r->address) : '';
         
-        // Set sponsor_id (DIP ID) from request if provided
-        if ($r->sponsor_id != null && !empty(trim($r->sponsor_id))) {
-            $sponsorDipId = trim($r->sponsor_id);
-            // Verify that sponsor exists
-            $sponsor = Administrator::where('business_name', $sponsorDipId)->first();
-            if ($sponsor) {
-                $user->sponsor_id = $sponsorDipId;
+        // Set group_id from request if provided
+        if ($r->group_id != null && !empty(trim($r->group_id))) {
+            $groupId = intval(trim($r->group_id));
+            // Verify that group exists and is active
+            $group = \App\Models\FfsGroup::where('id', $groupId)
+                ->where('status', 'Active')
+                ->first();
+            if ($group) {
+                $user->group_id = $groupId;
             }
-            // If sponsor doesn't exist, we'll just ignore it (don't block registration)
+            // If group doesn't exist or isn't active, we'll just ignore it (don't block registration)
         }
         
         // Set optional fields with empty defaults
@@ -324,7 +312,7 @@ class ApiAuthController extends Controller
         Config::set('jwt.ttl', 60 * 24 * 30 * 365);
 
         $token = auth('api')->attempt([
-            'email' => $email,
+            'username' => $phone_number,
             'password' => trim($r->password),
         ]);
 

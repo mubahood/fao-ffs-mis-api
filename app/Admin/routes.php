@@ -31,20 +31,22 @@ Route::group([
     // ========================================
     // INVESTMENT MANAGEMENT - Admin Only (Financial Operations)
     // ========================================
-    $router->group(['middleware' => 'admin.only'], function ($router) {
-        $router->resource('projects', ProjectController::class);
-        $router->resource('project-shares', ProjectShareController::class);
-        $router->resource('project-transactions', ProjectTransactionController::class);
-        $router->resource('disbursements', DisbursementController::class);
-        $router->resource('account-transactions', AccountTransactionController::class);
 
-        // Withdraw Requests Management
-        // NOTE: Specific routes MUST come before resource route to avoid conflicts
-        $router->get('withdraw-requests/pdf-pending', 'WithdrawRequestController@generatePendingPDF')->name('withdraw-requests.pdf-pending');
-        $router->get('withdraw-requests/{id}/approve', 'WithdrawRequestController@approve')->name('withdraw-requests.approve');
-        $router->get('withdraw-requests/{id}/reject', 'WithdrawRequestController@reject')->name('withdraw-requests.reject');
-        $router->resource('withdraw-requests', WithdrawRequestController::class);
-    });
+    $router->resource('projects', ProjectController::class);
+    $router->resource('project-shares', ProjectShareController::class);
+    $router->resource('project-transactions', ProjectTransactionController::class);
+    $router->resource('disbursements', DisbursementController::class);
+    $router->resource('account-transactions', AccountTransactionController::class);
+    $router->resource('account-transactions-deposit', AccountTransactionController::class);
+    $router->resource('account-transactions-withdraw', AccountTransactionController::class);
+    $router->resource('financial-accounts', FinancialAccountsController::class);
+
+    // Withdraw Requests Management
+    // NOTE: Specific routes MUST come before resource route to avoid conflicts
+    $router->get('withdraw-requests/pdf-pending', 'WithdrawRequestController@generatePendingPDF')->name('withdraw-requests.pdf-pending');
+    $router->get('withdraw-requests/{id}/approve', 'WithdrawRequestController@approve')->name('withdraw-requests.approve');
+    $router->get('withdraw-requests/{id}/reject', 'WithdrawRequestController@reject')->name('withdraw-requests.reject');
+    $router->resource('withdraw-requests', WithdrawRequestController::class);
 
     // ========================================
     // INSURANCE MANAGEMENT - Read access for managers, full access for admin
@@ -88,7 +90,7 @@ Route::group([
     // Users - Managers can view, only Admins can create/edit/delete
     // IMPORTANT: Specific routes (create, edit) MUST come BEFORE dynamic routes ({id})
     $router->get('users', 'UserController@index')->name('users.index');
-    
+
     $router->group(['middleware' => 'admin.only'], function ($router) {
         $router->get('users/create', 'UserController@create')->name('users.create');
         $router->post('users', 'UserController@store')->name('users.store');
@@ -96,13 +98,13 @@ Route::group([
         $router->put('users/{id}', 'UserController@update')->name('users.update');
         $router->delete('users/{id}', 'UserController@destroy')->name('users.destroy');
     });
-    
+
     // Dynamic route MUST come last to avoid matching 'create', 'edit', etc.
     $router->get('users/{id}', 'UserController@show')->name('users.show');
 
     // User Hierarchy & Network - View only for all admin users
     $router->resource('user-hierarchy', UserHierarchyController::class);
-    
+
     // ========================================
     // GROUPS MANAGEMENT - All group types handled by one controller
     // The controller detects group type from URL string
@@ -112,7 +114,7 @@ Route::group([
     $router->resource('ffs-farmer-business-schools', FfsGroupController::class);
     $router->resource('ffs-vslas', FfsGroupController::class);
     $router->resource('ffs-group-associations', FfsGroupController::class);
-    
+
     // ========================================
     // MEMBERS MANAGEMENT
     // ========================================
