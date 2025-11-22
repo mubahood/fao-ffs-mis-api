@@ -62,6 +62,26 @@ Route::post("search-history/clear", [ApiResurceController::class, "clear_search_
 Route::POST("users/login", [ApiAuthController::class, "login"]);
 Route::POST("users/register", [ApiAuthController::class, "register"]);
 
+// ========================================
+// VSLA ONBOARDING ROUTES
+// ========================================
+use App\Http\Controllers\VslaOnboardingController;
+
+Route::prefix('vsla-onboarding')->group(function () {
+    // Public routes (no authentication required)
+    Route::get('/config', [VslaOnboardingController::class, 'getOnboardingConfig']);
+    Route::post('/register-admin', [VslaOnboardingController::class, 'registerGroupAdmin']);
+    
+    // Protected routes (authentication required)
+    Route::middleware(EnsureTokenIsValid::class)->group(function () {
+        Route::get('/status', [VslaOnboardingController::class, 'getOnboardingStatus']);
+        Route::post('/create-group', [VslaOnboardingController::class, 'createVslaGroup']);
+        Route::post('/register-main-members', [VslaOnboardingController::class, 'registerMainMembers']);
+        Route::post('/create-cycle', [VslaOnboardingController::class, 'createSavingsCycle']);
+        Route::post('/complete', [VslaOnboardingController::class, 'completeOnboarding']);
+    });
+});
+
 // FFS Groups Management
 use App\Http\Controllers\FfsGroupController;
 
