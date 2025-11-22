@@ -82,6 +82,29 @@ Route::prefix('vsla-onboarding')->group(function () {
     });
 });
 
+// ========================================
+// VSLA TRANSACTION ROUTES (Double-Entry Accounting System)
+// ========================================
+use App\Http\Controllers\Api\VslaTransactionController;
+
+Route::prefix('vsla/transactions')->middleware(EnsureTokenIsValid::class)->group(function () {
+    // Transaction Creation Endpoints
+    Route::post('/saving', [VslaTransactionController::class, 'recordSaving']);
+    Route::post('/loan-disbursement', [VslaTransactionController::class, 'disburseLoan']);
+    Route::post('/loan-repayment', [VslaTransactionController::class, 'recordLoanRepayment']);
+    Route::post('/fine', [VslaTransactionController::class, 'recordFine']);
+    
+    // Balance & Statement Endpoints
+    Route::get('/member-balance/{user_id}', [VslaTransactionController::class, 'getMemberBalance']);
+    Route::get('/group-balance/{group_id}', [VslaTransactionController::class, 'getGroupBalance']);
+    Route::get('/member-statement', [VslaTransactionController::class, 'getMemberStatement']);
+    Route::get('/group-statement', [VslaTransactionController::class, 'getGroupStatement']);
+    
+    // Dashboard & Reporting Endpoints
+    Route::get('/recent', [VslaTransactionController::class, 'getRecentTransactions']);
+    Route::get('/dashboard-summary', [VslaTransactionController::class, 'getDashboardSummary']);
+});
+
 // FFS Groups Management
 use App\Http\Controllers\FfsGroupController;
 
