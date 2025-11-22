@@ -611,18 +611,20 @@ class VslaTransactionController extends Controller
         try {
             $projectId = $request->input('project_id');
             
-            // Get project and its group_id
+            // Get project to verify it exists
             $project = Project::find($projectId);
-            if (!$project || !$project->group_id) {
+            if (!$project) {
                 return response()->json([
                     'code' => 0,
-                    'message' => 'Project does not have an associated group',
+                    'message' => 'Project not found',
                     'data' => null,
                 ], 404);
             }
 
-            // Get all users in this group
-            $members = User::where('group_id', $project->group_id)
+            // Get all users who have shares in this project (investors/members)
+            $members = User::whereHas('projectShares', function ($query) use ($projectId) {
+                    $query->where('project_id', $projectId);
+                })
                 ->where('status', 1)
                 ->select('id', 'name', 'member_code', 'phone_number', 'email')
                 ->orderBy('name', 'asc')
