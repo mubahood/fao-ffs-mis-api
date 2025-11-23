@@ -643,4 +643,92 @@ class VslaTransactionController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * Universal transaction creation endpoint
+     * Handles all transaction types: saving, fine, withdrawal, charge, etc.
+     * 
+     * POST /api/vsla/transactions/create
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createTransaction(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer|exists:users,id',
+            'project_id' => 'required|integer|exists:projects,id',
+            'transaction_type' => 'required|string|in:saving,fine,loan_repayment,charge,welfare,social_fund,share_out,other',
+            'amount' => 'required|numeric|min:1',
+            'description' => 'required|string|max:500',
+            'transaction_date' => 'nullable|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 0,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            $transactionType = $request->input('transaction_type');
+            $data = $request->all();
+
+            // Route to appropriate service method based on transaction type
+            $result = null;
+            
+            switch ($transactionType) {
+                case 'saving':
+                    $result = $this->transactionService->recordSaving($data);
+                    break;
+                    
+                case 'fine':
+                case 'charge':
+                case 'welfare':
+                case 'social_fund':
+                    $result = $this->transactionService->recordFine($data);
+                    break;
+                    
+                case 'loan_repayment':
+                    $result = $this->transactionService->recordLoanRepayment($data);
+                    break;
+                    
+                case 'share_out':
+                case 'other':
+                    // For generic transactions, use the fine method (member pays to group)
+                    $result = $this->transactionService->recordFine($data);
+                    break;
+                    
+                default:
+                    return response()->json([
+                        'code' => 0,
+                        'message' => 'Invalid transaction type',
+                        'data' => null,
+                    ], 400);
+            }
+
+            if ($result && $result['success']) {
+                return response()->json([
+                    'code' => 1,
+                    'message' => $result['message'],
+                    'data' => $result['data'],
+                ], 201);
+            }
+
+            return response()->json([
+                'code' => 0,
+                'message' => $result['message'] ?? 'Transaction failed',
+                'data' => null,
+            ], 400);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 0,
+                'message' => 'Transaction failed: ' . $e->getMessage(),
+                'data' => null,
+            ], 500);
+        }
+    }
 }

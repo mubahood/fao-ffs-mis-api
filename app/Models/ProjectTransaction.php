@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProjectTransaction extends Model
 {
@@ -55,6 +56,11 @@ class ProjectTransaction extends Model
                     $project->recalculateFromTransactions();
                 }
             }
+            
+            // Update user account balance if this is a user transaction
+            if ($transaction->owner_type === 'user' && $transaction->owner_id) {
+                static::updateUserAccountBalance($transaction->owner_id, $transaction->project_id);
+            }
         });
 
         // After updating a transaction, update project computed fields
@@ -64,6 +70,11 @@ class ProjectTransaction extends Model
                 if ($project) {
                     $project->recalculateFromTransactions();
                 }
+            }
+            
+            // Update user account balance if this is a user transaction
+            if ($transaction->owner_type === 'user' && $transaction->owner_id) {
+                static::updateUserAccountBalance($transaction->owner_id, $transaction->project_id);
             }
         });
 
@@ -75,6 +86,11 @@ class ProjectTransaction extends Model
                     $project->recalculateFromTransactions();
                 }
             }
+            
+            // Update user account balance if this is a user transaction
+            if ($transaction->owner_type === 'user' && $transaction->owner_id) {
+                static::updateUserAccountBalance($transaction->owner_id, $transaction->project_id);
+            }
         });
 
         // After restoring a soft-deleted transaction, update project
@@ -84,6 +100,11 @@ class ProjectTransaction extends Model
                 if ($project) {
                     $project->recalculateFromTransactions();
                 }
+            }
+            
+            // Update user account balance if this is a user transaction
+            if ($transaction->owner_type === 'user' && $transaction->owner_id) {
+                static::updateUserAccountBalance($transaction->owner_id, $transaction->project_id);
             }
         });
     }
@@ -335,5 +356,41 @@ class ProjectTransaction extends Model
             'difference' => $difference,
             'is_balanced' => $isBalanced,
         ];
+    }
+
+    /**
+     * Update user's balance and loan_balance fields in users table
+     * This keeps the stored balance in sync with the calculated balance from transactions
+     *
+     * @param int $userId
+     * @param int|null $projectId Optional project filter (null = all projects)
+     * @return void
+     */
+    public static function updateUserAccountBalance($userId, $projectId = null)
+    {
+        try {
+            $user = User::find($userId);
+            if (!$user) {
+                return;
+            }
+
+            // Calculate balances from all user's transactions
+            $balances = self::calculateUserBalances($userId, $projectId);
+
+            // Update user's balance fields
+            // Balance = savings - fines (net position excluding loans)
+            $user->balance = $balances['savings'] - abs($balances['fines']);
+            
+            // Loan balance = outstanding loan amount (always show as positive)
+            $user->loan_balance = abs($balances['loans']);
+
+            $user->save();
+        } catch (\Exception $e) {
+            Log::error('Failed to update user account balance', [
+                'user_id' => $userId,
+                'project_id' => $projectId,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

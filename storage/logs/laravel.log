@@ -2303,3 +2303,471 @@ Please change your password after logging in.
 [2025-11-23 00:14:05] local.INFO: EnsureTokenIsValid - About to check if user is null  
 [2025-11-23 00:14:05] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
 [2025-11-23 00:14:05] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:25:05] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:25:05] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:25:05] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:25:05] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:25:05] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:27:37] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:27:37] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:27:37] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:27:37] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:27:37] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:28:58] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:28:58] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:28:58] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:28:58] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:28:58] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:29:00] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:29:00] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:29:00] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:29:00] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:29:00] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:29:03] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:29:03] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:29:03] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:29:03] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:29:03] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:29:59] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:29:59] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:29:59] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:29:59] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:29:59] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:30:00] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:30:00] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:30:00] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:30:00] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:30:00] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:30:03] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:30:03] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:30:03] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:30:03] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:30:03] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:32:47] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:32:47] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:32:47] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:32:47] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:32:47] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:32:55] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:32:55] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:32:55] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:32:55] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:32:55] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:33:17] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:33:17] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:33:17] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:33:17] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:33:17] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 00:33:35] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:33:35] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:33:35] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:33:35] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:33:35] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:33:39] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:33:39] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:33:39] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:33:39] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:33:39] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:37:16] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:37:16] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:37:16] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:37:16] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:37:16] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:37:17] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:37:17] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:37:17] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:37:17] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:37:17] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:39:06] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:39:06] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:39:06] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:39:06] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:39:06] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:44:06] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:44:06] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:44:06] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:44:06] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:44:06] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:44:08] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:44:08] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:44:08] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:44:08] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:44:08] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 00:44:24] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:44:24] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:44:24] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:44:24] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:44:24] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":186,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 00:44:24] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":186,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 00:44:24] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 00:44:28] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 00:44:29] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 00:44:29] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 00:44:29] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 00:44:29] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:00:45] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:00:45] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:00:45] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:00:45] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:00:45] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:00:48] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:00:48] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:00:48] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:00:48] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:00:48] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:01:02] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:01:02] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:01:02] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:01:02] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:01:02] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:01:20] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:01:20] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:01:20] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:01:20] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:01:20] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:05:15] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:05:15] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:05:15] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:05:15] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:05:15] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:05:20] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:05:20] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:05:20] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:05:20] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:05:20] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:05:21] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:08:58] local.ERROR: Method App\Http\Controllers\ApiResurceController::chat_heads does not exist. {"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\ApiResurceController::chat_heads does not exist. at /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Controller.php:68)
+[stacktrace]
+#0 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Controller.php(54): Illuminate\\Routing\\Controller->__call('chat_heads', Array)
+#1 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(45): Illuminate\\Routing\\Controller->callAction('chat_heads', Array)
+#2 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(261): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\ApiResurceController), 'chat_heads')
+#3 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(205): Illuminate\\Routing\\Route->runController()
+#4 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(721): Illuminate\\Routing\\Route->run()
+#5 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#6 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(90): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(55): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\\Http\\Request), Object(Closure), 'api', Object(Closure))
+#10 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\ThrottleRequests->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'api')
+#11 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(719): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#13 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#14 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#15 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#16 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#17 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#18 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/fruitcake/laravel-cors/src/HandleCors.php(52): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#34 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#35 /Applications/MAMP/htdocs/fao-ffs-mis-api/public/index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#36 /Applications/MAMP/htdocs/fao-ffs-mis-api/server.php(21): require_once('/Applications/M...')
+#37 {main}
+"} 
+[2025-11-23 01:09:02] local.ERROR: Method App\Http\Controllers\ApiResurceController::chat_heads does not exist. {"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\ApiResurceController::chat_heads does not exist. at /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Controller.php:68)
+[stacktrace]
+#0 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Controller.php(54): Illuminate\\Routing\\Controller->__call('chat_heads', Array)
+#1 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(45): Illuminate\\Routing\\Controller->callAction('chat_heads', Array)
+#2 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(261): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\ApiResurceController), 'chat_heads')
+#3 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(205): Illuminate\\Routing\\Route->runController()
+#4 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(721): Illuminate\\Routing\\Route->run()
+#5 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#6 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(90): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(55): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\\Http\\Request), Object(Closure), 'api', Object(Closure))
+#10 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\ThrottleRequests->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'api')
+#11 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(719): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#13 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#14 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#15 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#16 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#17 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#18 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/fruitcake/laravel-cors/src/HandleCors.php(52): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#34 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#35 /Applications/MAMP/htdocs/fao-ffs-mis-api/public/index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#36 /Applications/MAMP/htdocs/fao-ffs-mis-api/server.php(21): require_once('/Applications/M...')
+#37 {main}
+"} 
+[2025-11-23 01:09:18] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:12:57] local.INFO: EnsureTokenIsValid - User ID from header: 0  
+[2025-11-23 01:12:57] local.ERROR: EnsureTokenIsValid - No user ID provided  
+[2025-11-23 01:13:08] local.INFO: EnsureTokenIsValid - User ID from header: 0  
+[2025-11-23 01:13:08] local.ERROR: EnsureTokenIsValid - No user ID provided  
+[2025-11-23 01:13:27] local.INFO: EnsureTokenIsValid - User ID from header: 0  
+[2025-11-23 01:13:27] local.ERROR: EnsureTokenIsValid - No user ID provided  
+[2025-11-23 01:14:24] local.INFO: EnsureTokenIsValid - User ID from header: 0  
+[2025-11-23 01:14:24] local.ERROR: EnsureTokenIsValid - No user ID provided  
+[2025-11-23 01:14:24] local.INFO: EnsureTokenIsValid - User ID from header: 0  
+[2025-11-23 01:14:24] local.ERROR: EnsureTokenIsValid - No user ID provided  
+[2025-11-23 01:14:25] local.INFO: EnsureTokenIsValid - User ID from header: 0  
+[2025-11-23 01:14:25] local.ERROR: EnsureTokenIsValid - No user ID provided  
+[2025-11-23 01:15:26] local.INFO: EnsureTokenIsValid - User ID from header: 1  
+[2025-11-23 01:15:26] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:15:26] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:15:26] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:15:26] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:15:26] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:15:26] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 01:16:19] local.INFO: EnsureTokenIsValid - User ID from header: 1  
+[2025-11-23 01:16:19] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:16:19] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:16:19] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:16:19] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:19] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - User ID from header: 1  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:16:20] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - User ID from header: 1  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:16:20] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - User ID from header: 1  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:16:20] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - User ID from header: 1  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:16:20] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":1,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:16:20] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 01:16:21] local.INFO: EnsureTokenIsValid - User ID from header: 1  
+[2025-11-23 01:16:21] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:16:21] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:16:21] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:16:21] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:17:10] local.INFO: ============ USER OBSERVER: CREATED EVENT ============ {"user_id":206,"is_dtehm_member":null,"is_dip_member":null} 
+[2025-11-23 01:17:10] local.ERROR: Class "App\Http\Controllers\JWTAuth" not found {"exception":"[object] (Error(code: 0): Class \"App\\Http\\Controllers\\JWTAuth\" not found at /Applications/MAMP/htdocs/fao-ffs-mis-api/app/Http/Controllers/VslaOnboardingController.php:147)
+[stacktrace]
+#0 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Controller.php(54): App\\Http\\Controllers\\VslaOnboardingController->registerGroupAdmin(Object(Illuminate\\Http\\Request))
+#1 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(45): Illuminate\\Routing\\Controller->callAction('registerGroupAd...', Array)
+#2 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(261): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\VslaOnboardingController), 'registerGroupAd...')
+#3 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(205): Illuminate\\Routing\\Route->runController()
+#4 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(721): Illuminate\\Routing\\Route->run()
+#5 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#6 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(90): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(55): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\\Http\\Request), Object(Closure), 'api', Object(Closure))
+#10 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\ThrottleRequests->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'api')
+#11 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(719): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#13 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#14 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#15 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#16 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#17 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#18 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/fruitcake/laravel-cors/src/HandleCors.php(52): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#34 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#35 /Applications/MAMP/htdocs/fao-ffs-mis-api/public/index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#36 /Applications/MAMP/htdocs/fao-ffs-mis-api/server.php(21): require_once('/Applications/M...')
+#37 {main}
+"} 
+[2025-11-23 01:17:31] local.INFO: ============ USER OBSERVER: CREATED EVENT ============ {"user_id":207,"is_dtehm_member":null,"is_dip_member":null} 
+[2025-11-23 01:17:31] local.ERROR: Class "App\Http\Controllers\JWTAuth" not found {"exception":"[object] (Error(code: 0): Class \"App\\Http\\Controllers\\JWTAuth\" not found at /Applications/MAMP/htdocs/fao-ffs-mis-api/app/Http/Controllers/VslaOnboardingController.php:147)
+[stacktrace]
+#0 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Controller.php(54): App\\Http\\Controllers\\VslaOnboardingController->registerGroupAdmin(Object(Illuminate\\Http\\Request))
+#1 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(45): Illuminate\\Routing\\Controller->callAction('registerGroupAd...', Array)
+#2 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(261): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\VslaOnboardingController), 'registerGroupAd...')
+#3 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(205): Illuminate\\Routing\\Route->runController()
+#4 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(721): Illuminate\\Routing\\Route->run()
+#5 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#6 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(90): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(55): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\\Http\\Request), Object(Closure), 'api', Object(Closure))
+#10 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\ThrottleRequests->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'api')
+#11 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(719): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#13 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#14 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#15 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#16 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#17 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#18 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/fruitcake/laravel-cors/src/HandleCors.php(52): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#34 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#35 /Applications/MAMP/htdocs/fao-ffs-mis-api/public/index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#36 /Applications/MAMP/htdocs/fao-ffs-mis-api/server.php(21): require_once('/Applications/M...')
+#37 {main}
+"} 
+[2025-11-23 01:19:35] local.INFO: ============ USER OBSERVER: CREATED EVENT ============ {"user_id":208,"is_dtehm_member":null,"is_dip_member":null} 
+[2025-11-23 01:20:34] local.INFO: EnsureTokenIsValid - User ID from header: 208  
+[2025-11-23 01:20:34] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:20:34] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:20:34] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:20:34] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":208,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:20:34] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:22:36] local.INFO: EnsureTokenIsValid - User ID from header: 208  
+[2025-11-23 01:22:36] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:22:36] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:22:36] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:22:36] local.INFO: ============ USER OBSERVER: CREATED EVENT ============ {"user_id":209,"is_dtehm_member":null,"is_dip_member":null} 
+[2025-11-23 01:22:36] local.INFO: ============ USER OBSERVER: CREATED EVENT ============ {"user_id":210,"is_dtehm_member":null,"is_dip_member":null} 
+[2025-11-23 01:22:36] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":208,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:22:36] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:23:53] local.INFO: EnsureTokenIsValid - User ID from header: 208  
+[2025-11-23 01:23:53] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:23:53] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:23:53] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:23:53] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":208,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:23:53] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:23:54] local.INFO: EnsureTokenIsValid - User ID from header: 208  
+[2025-11-23 01:23:54] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:23:54] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:23:54] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:23:54] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":208,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:23:54] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:24:20] local.ERROR: Method App\Http\Controllers\ApiResurceController::chat_heads does not exist. {"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\ApiResurceController::chat_heads does not exist. at /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Controller.php:68)
+[stacktrace]
+#0 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Controller.php(54): Illuminate\\Routing\\Controller->__call('chat_heads', Array)
+#1 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(45): Illuminate\\Routing\\Controller->callAction('chat_heads', Array)
+#2 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(261): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\ApiResurceController), 'chat_heads')
+#3 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Route.php(205): Illuminate\\Routing\\Route->runController()
+#4 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(721): Illuminate\\Routing\\Route->run()
+#5 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#6 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(90): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(55): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\\Http\\Request), Object(Closure), 'api', Object(Closure))
+#10 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\ThrottleRequests->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'api')
+#11 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(719): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#13 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#14 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(662): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#15 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Routing/Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#16 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(167): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#17 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#18 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/fruitcake/laravel-cors/src/HandleCors.php(52): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#34 /Applications/MAMP/htdocs/fao-ffs-mis-api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#35 /Applications/MAMP/htdocs/fao-ffs-mis-api/public/index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#36 /Applications/MAMP/htdocs/fao-ffs-mis-api/server.php(21): require_once('/Applications/M...')
+#37 {main}
+"} 
+[2025-11-23 01:24:43] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:24:43] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:24:43] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:24:43] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:24:43] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:25:11] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:25:11] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:25:11] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:25:11] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:25:11] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:25:12] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:25:12] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:25:12] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:25:12] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:25:12] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:26:01] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:26:01] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:26:01] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:26:01] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:26:01] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-11-23 01:27:48] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:27:48] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:27:48] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:27:48] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:27:48] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":187,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:27:48] local.INFO: ============ USER OBSERVER: UPDATED EVENT ============ {"user_id":187,"is_dtehm_member":"No","is_dip_member":"No","isDirty_dtehm":false,"isDirty_dip":false} 
+[2025-11-23 01:27:48] local.INFO: EnsureTokenIsValid - Response received: 201  
+[2025-11-23 01:27:52] local.INFO: EnsureTokenIsValid - User ID from header: 186  
+[2025-11-23 01:27:52] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-11-23 01:27:52] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-11-23 01:27:52] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-11-23 01:27:52] local.INFO: EnsureTokenIsValid - Response received: 200  

@@ -88,7 +88,10 @@ Route::prefix('vsla-onboarding')->group(function () {
 use App\Http\Controllers\Api\VslaTransactionController;
 
 Route::prefix('vsla/transactions')->middleware(EnsureTokenIsValid::class)->group(function () {
-    // Transaction Creation Endpoints
+    // Universal Transaction Creation Endpoint
+    Route::post('/create', [VslaTransactionController::class, 'createTransaction']);
+    
+    // Transaction Creation Endpoints (Legacy/Specific)
     Route::post('/saving', [VslaTransactionController::class, 'recordSaving']);
     Route::post('/loan-disbursement', [VslaTransactionController::class, 'disburseLoan']);
     Route::post('/loan-repayment', [VslaTransactionController::class, 'recordLoanRepayment']);

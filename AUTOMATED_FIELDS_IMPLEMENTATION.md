@@ -82,7 +82,7 @@ When a disbursement is created, the project's `total_returns` is updated via the
 
 ---
 
-### 5. User Model - Account Balance ✅
+### 5. User Model - Account Balance ✅ (UPDATED Nov 23, 2025)
 
 **File:** `app/Models/User.php`
 
@@ -97,6 +97,22 @@ User balance is computed on-the-fly from all AccountTransaction records. No stor
 
 ```php
 $balance = $user->account_balance; // Automatically computed
+```
+
+**UPDATE - VSLA Balance Integration:**
+The `users` table now has `balance` and `loan_balance` columns that are automatically updated when `ProjectTransaction` records are created/updated/deleted. See `USER_BALANCE_AUTO_UPDATE_FIX_COMPLETE.md` for full details.
+
+**File:** `app/Models/ProjectTransaction.php`
+
+**NEW: Auto-Update Logic for User Balances:**
+- When a ProjectTransaction with `owner_type='user'` is created/updated/deleted
+- The user's `balance` and `loan_balance` fields are automatically recalculated
+- Balance = savings - fines (net position)
+- Loan Balance = outstanding loan amount
+
+```php
+// Automatically triggered on transaction changes
+ProjectTransaction::updateUserAccountBalance($userId, $projectId);
 ```
 
 ---
