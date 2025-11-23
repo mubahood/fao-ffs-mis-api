@@ -143,8 +143,13 @@ class VslaOnboardingController extends Controller
             
             $user->save();
 
-            // Generate token for auto-login
+            // Generate token for auto-login with long expiry
+            JWTAuth::factory()->setTTL(60 * 24 * 30 * 365);
             $token = auth('api')->login($user);
+
+            // Set token on user object for response
+            $user->token = $token;
+            $user->remember_token = $token;
 
             DB::commit();
 

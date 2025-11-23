@@ -18,25 +18,41 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
+        // Get the authenticated user (person registering the member)
+        // The EnsureTokenIsValid middleware stores it in $request->userModel
+        $registrar = $request->userModel ?? auth('api')->user();
+        
+        if (!$registrar) {
+            return response()->json([
+                'code' => 0,
+                'message' => 'Authentication required. Please login.',
+                'data' => null,
+            ], 401);
+        }
+
+        // Check if registrar has a valid group_id
+        if (empty($registrar->group_id) || $registrar->group_id < 1) {
+            return response()->json([
+                'code' => 0,
+                'message' => 'You must be assigned to a group before you can register members. Please contact your administrator.',
+                'data' => null,
+            ], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
             'phone_number' => 'required|string|unique:users,phone_number|max:50',
             'sex' => 'required|in:Male,Female',
-            'group_id' => 'nullable|integer|exists:ffs_groups,id',
             'dob' => 'nullable|date',
-            'email' => 'nullable|email|unique:users,email|max:255',
             'district_id' => 'nullable|integer|exists:locations,id',
-            'subcounty_id' => 'nullable|integer|exists:locations,id',
-            'parish_id' => 'nullable|integer|exists:locations,id',
-            'village' => 'nullable|string|max:100',
             'education_level' => 'nullable|in:None,Primary,Secondary,Tertiary,University',
             'marital_status' => 'nullable|in:Single,Married,Divorced,Widowed',
             'occupation' => 'nullable|string|max:100',
-            'household_size' => 'nullable|integer|min:0',
             'emergency_contact_name' => 'nullable|string|max:100',
             'emergency_contact_phone' => 'nullable|string|max:50',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'password' => 'nullable|string|min:6|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -72,9 +88,15 @@ class MemberController extends Controller
             $member->sex = $request->sex;
             $member->member_code = $memberCode;
             
-            // Set username and password to phone number by default
+            // Set username to phone number (always)
             $member->username = $request->phone_number;
-            $member->password = Hash::make($request->phone_number);
+            
+            // Set password: use custom password if provided, otherwise use phone number
+            if ($request->filled('password')) {
+                $member->password = Hash::make($request->password);
+            } else {
+                $member->password = Hash::make($request->phone_number);
+            }
             
             // Set user_type as Customer (member)
             $member->user_type = 'Customer';
@@ -83,23 +105,13 @@ class MemberController extends Controller
             if ($request->filled('dob')) {
                 $member->dob = $request->dob;
             }
-            if ($request->filled('email')) {
-                $member->email = $request->email;
-            }
-            if ($request->filled('group_id')) {
-                $member->group_id = $request->group_id;
-            }
+            
+            // IMPORTANT: Always inherit group_id from the person registering
+            // Never trust group_id from request - use the registrar's group
+            $member->group_id = $registrar->group_id;
+            
             if ($request->filled('district_id')) {
                 $member->district_id = $request->district_id;
-            }
-            if ($request->filled('subcounty_id')) {
-                $member->subcounty_id = $request->subcounty_id;
-            }
-            if ($request->filled('parish_id')) {
-                $member->parish_id = $request->parish_id;
-            }
-            if ($request->filled('village')) {
-                $member->village = $request->village;
             }
             if ($request->filled('education_level')) {
                 $member->education_level = $request->education_level;
@@ -109,9 +121,6 @@ class MemberController extends Controller
             }
             if ($request->filled('occupation')) {
                 $member->occupation = $request->occupation;
-            }
-            if ($request->filled('household_size')) {
-                $member->household_size = $request->household_size;
             }
             if ($request->filled('emergency_contact_name')) {
                 $member->emergency_contact_name = $request->emergency_contact_name;
@@ -124,8 +133,8 @@ class MemberController extends Controller
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
                 $avatarName = time() . '_' . $member->phone_number . '.' . $avatar->getClientOriginalExtension();
-                $avatarPath = $avatar->storeAs('public/avatars', $avatarName);
-                $member->avatar = 'avatars/' . $avatarName;
+                $avatarPath = $avatar->move(public_path('storage/images'), $avatarName);
+                $member->avatar = 'storage/images/' . $avatarName;
             }
 
             $member->save();
@@ -167,7 +176,9 @@ class MemberController extends Controller
                     'household_size' => $member->household_size,
                     'emergency_contact_name' => $member->emergency_contact_name,
                     'emergency_contact_phone' => $member->emergency_contact_phone,
-                    'avatar' => $member->avatar ? url('storage/' . $member->avatar) : null,
+                    'balance' => floatval($member->balance ?? 0),
+                    'loan_balance' => floatval($member->loan_balance ?? 0),
+                    'avatar' => $member->avatar ? url($member->avatar) : null,
                     'created_at' => $member->created_at->format('Y-m-d H:i:s'),
                 ],
             ], 201);
@@ -187,16 +198,24 @@ class MemberController extends Controller
      * Get all members with optional filtering
      * 
      * GET /api/members
-     * Query params: ?group_id=1&search=john&sex=Male
+     * Query params: ?group_id=1&search=john&sex=Male&sort_by=balance
      */
     public function index(Request $request)
     {
+        // Get the authenticated user
+        $authUser = User::find($request->header('user_id'));
+        
         $query = User::where('user_type', 'Customer')
             ->with(['group', 'district', 'subcounty', 'parish']);
 
-        // Filter by group
-        if ($request->has('group_id') && $request->group_id != '') {
-            $query->where('group_id', $request->group_id);
+        // If user is a Customer (group member), show only members from their group
+        if ($authUser && $authUser->user_type === 'Customer' && $authUser->group_id) {
+            $query->where('group_id', $authUser->group_id);
+        } else {
+            // For admins/other users, allow filtering by group
+            if ($request->has('group_id') && $request->group_id != '') {
+                $query->where('group_id', $request->group_id);
+            }
         }
 
         // Search by name or phone
@@ -216,7 +235,18 @@ class MemberController extends Controller
             $query->where('sex', $request->sex);
         }
 
-        $members = $query->orderBy('created_at', 'desc')->get();
+        // Sorting
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        
+        $allowedSortFields = ['created_at', 'name', 'balance', 'loan_balance', 'member_code'];
+        if (in_array($sortBy, $allowedSortFields)) {
+            $query->orderBy($sortBy, $sortOrder);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $members = $query->get();
 
         return response()->json([
             'code' => 1,
@@ -232,6 +262,8 @@ class MemberController extends Controller
                     'email' => $member->email,
                     'sex' => $member->sex,
                     'dob' => $member->dob,
+                    'balance' => floatval($member->balance ?? 0),
+                    'loan_balance' => floatval($member->loan_balance ?? 0),
                     'group_id' => $member->group_id,
                     'group' => $member->group ? [
                         'id' => $member->group->id,
@@ -239,7 +271,7 @@ class MemberController extends Controller
                     ] : null,
                     'district' => $member->district ? $member->district->name : null,
                     'village' => $member->village,
-                    'avatar' => $member->avatar ? url('storage/' . $member->avatar) : null,
+                    'avatar' => $member->avatar ? url($member->avatar) : null,
                 ];
             }),
         ]);
@@ -294,9 +326,11 @@ class MemberController extends Controller
                 'marital_status' => $member->marital_status,
                 'occupation' => $member->occupation,
                 'household_size' => $member->household_size,
+                'balance' => floatval($member->balance ?? 0),
+                'loan_balance' => floatval($member->loan_balance ?? 0),
                 'emergency_contact_name' => $member->emergency_contact_name,
                 'emergency_contact_phone' => $member->emergency_contact_phone,
-                'avatar' => $member->avatar ? url('storage/' . $member->avatar) : null,
+                'avatar' => $member->avatar ? url($member->avatar) : null,
                 'created_at' => $member->created_at->format('Y-m-d H:i:s'),
             ],
         ]);
@@ -403,6 +437,299 @@ class MemberController extends Controller
             return response()->json([
                 'code' => 0,
                 'message' => 'Failed to send welcome message: ' . $e->getMessage(),
+                'data' => null,
+            ], 500);
+        }
+    }
+
+    /**
+     * Update member
+     * 
+     * PUT /api/members/{id}
+     */
+    public function update(Request $request, $id)
+    {
+        $member = User::find($id);
+
+        if (!$member) {
+            return response()->json([
+                'code' => 0,
+                'message' => 'Member not found',
+                'data' => null,
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'sometimes|required|string|max:100',
+            'last_name' => 'sometimes|required|string|max:100',
+            'phone_number' => 'sometimes|required|string|max:50|unique:users,phone_number,' . $id,
+            'sex' => 'sometimes|required|in:Male,Female',
+            'dob' => 'nullable|date',
+            'district_id' => 'nullable|integer',
+            'education_level' => 'nullable|in:None,Primary,Secondary,Tertiary,University',
+            'marital_status' => 'nullable|in:Single,Married,Divorced,Widowed',
+            'occupation' => 'nullable|string|max:100',
+            'emergency_contact_name' => 'nullable|string|max:100',
+            'emergency_contact_phone' => 'nullable|string|max:50',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'password' => 'nullable|string|min:6|max:100',
+            'status' => 'nullable|in:0,1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 0,
+                'message' => $validator->errors()->first(),
+                'data' => null,
+            ], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            if ($request->has('first_name')) {
+                $member->first_name = $request->first_name;
+            }
+            if ($request->has('last_name')) {
+                $member->last_name = $request->last_name;
+            }
+            if ($request->has('first_name') || $request->has('last_name')) {
+                $member->name = ($request->first_name ?? $member->first_name) . ' ' . ($request->last_name ?? $member->last_name);
+            }
+            if ($request->has('phone_number')) {
+                $member->phone_number = $request->phone_number;
+                // Update username to match phone number
+                $member->username = $request->phone_number;
+            }
+            if ($request->filled('password')) {
+                // Update password if provided
+                $member->password = Hash::make($request->password);
+            }
+            if ($request->has('sex')) {
+                $member->sex = $request->sex;
+            }
+            if ($request->has('dob')) {
+                $member->dob = $request->dob;
+            }
+            if ($request->has('district_id')) {
+                $member->district_id = $request->district_id;
+            }
+            if ($request->has('education_level')) {
+                $member->education_level = $request->education_level;
+            }
+            if ($request->has('marital_status')) {
+                $member->marital_status = $request->marital_status;
+            }
+            if ($request->has('occupation')) {
+                $member->occupation = $request->occupation;
+            }
+            if ($request->has('emergency_contact_name')) {
+                $member->emergency_contact_name = $request->emergency_contact_name;
+            }
+            if ($request->has('emergency_contact_phone')) {
+                $member->emergency_contact_phone = $request->emergency_contact_phone;
+            }
+            
+            // Handle avatar upload
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $avatarName = time() . '_' . $avatar->getClientOriginalName();
+                $avatar->move(public_path('storage/images'), $avatarName);
+                $member->avatar = 'storage/images/' . $avatarName;
+            }
+            if ($request->has('status')) {
+                $member->status = $request->status;
+            }
+
+            $member->save();
+
+            DB::commit();
+
+            return response()->json([
+                'code' => 1,
+                'message' => 'Member updated successfully',
+                'data' => $member,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'code' => 0,
+                'message' => 'Failed to update member: ' . $e->getMessage(),
+                'data' => null,
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete member (deactivate)
+     * 
+     * DELETE /api/members/{id}
+     */
+    public function destroy($id)
+    {
+        try {
+            $member = User::find($id);
+
+            if (!$member) {
+                return response()->json([
+                    'code' => 0,
+                    'message' => 'Member not found',
+                    'data' => null,
+                ], 404);
+            }
+
+            // Deactivate instead of delete
+            $member->status = 0;
+            $member->save();
+
+            return response()->json([
+                'code' => 1,
+                'message' => 'Member deactivated successfully',
+                'data' => null,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 0,
+                'message' => 'Failed to delete member: ' . $e->getMessage(),
+                'data' => null,
+            ], 500);
+        }
+    }
+
+    /**
+     * Bulk sync members from offline queue
+     * 
+     * POST /api/members/sync
+     */
+    public function sync(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'members' => 'required|array',
+            'members.*.temp_id' => 'required|string',
+            'members.*.action' => 'required|in:create,update',
+            'members.*.data' => 'required|array',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 0,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $results = [
+            'success' => [],
+            'failed' => [],
+        ];
+
+        DB::beginTransaction();
+        try {
+            foreach ($request->members as $item) {
+                try {
+                    $tempId = $item['temp_id'];
+                    $action = $item['action'];
+                    $data = $item['data'];
+
+                    if ($action === 'create') {
+                        // Create new member
+                        $year = date('Y');
+                        $lastMember = User::where('member_code', 'LIKE', "MEM-{$year}-%")
+                            ->orderBy('id', 'desc')
+                            ->first();
+                        
+                        $nextNumber = 1;
+                        if ($lastMember && preg_match("/MEM-{$year}-(\d+)/", $lastMember->member_code, $matches)) {
+                            $nextNumber = intval($matches[1]) + 1;
+                        }
+                        
+                        $memberCode = sprintf("MEM-%s-%04d", $year, $nextNumber);
+
+                        $member = new User();
+                        $member->first_name = $data['first_name'] ?? '';
+                        $member->last_name = $data['last_name'] ?? '';
+                        $member->name = ($data['first_name'] ?? '') . ' ' . ($data['last_name'] ?? '');
+                        $member->phone_number = $data['phone_number'];
+                        $member->sex = $data['sex'] ?? 'Male';
+                        $member->member_code = $memberCode;
+                        $member->username = $data['phone_number'];
+                        $member->password = Hash::make($data['phone_number']);
+                        $member->user_type = 'Customer';
+                        
+                        // Optional fields
+                        if (isset($data['dob'])) $member->dob = $data['dob'];
+                        if (isset($data['email'])) $member->email = $data['email'];
+                        if (isset($data['district_id'])) $member->district_id = $data['district_id'];
+                        if (isset($data['subcounty_id'])) $member->subcounty_id = $data['subcounty_id'];
+                        if (isset($data['parish_id'])) $member->parish_id = $data['parish_id'];
+                        if (isset($data['village'])) $member->village = $data['village'];
+                        if (isset($data['education_level'])) $member->education_level = $data['education_level'];
+                        if (isset($data['marital_status'])) $member->marital_status = $data['marital_status'];
+                        if (isset($data['occupation'])) $member->occupation = $data['occupation'];
+                        if (isset($data['household_size'])) $member->household_size = $data['household_size'];
+                        if (isset($data['emergency_contact_name'])) $member->emergency_contact_name = $data['emergency_contact_name'];
+                        if (isset($data['emergency_contact_phone'])) $member->emergency_contact_phone = $data['emergency_contact_phone'];
+
+                        $member->save();
+                        
+                        $results['success'][] = [
+                            'temp_id' => $tempId,
+                            'server_id' => $member->id,
+                            'member' => $member,
+                        ];
+                    } elseif ($action === 'update') {
+                        $memberId = $data['id'] ?? null;
+                        if (!$memberId) {
+                            throw new \Exception('Member ID required for update');
+                        }
+
+                        $member = User::find($memberId);
+                        if (!$member) {
+                            throw new \Exception('Member not found');
+                        }
+
+                        // Update fields
+                        foreach ($data as $key => $value) {
+                            if ($key !== 'id' && $key !== 'member_code' && $key !== 'password') {
+                                $member->$key = $value;
+                            }
+                        }
+
+                        // Update name if first_name or last_name changed
+                        if (isset($data['first_name']) || isset($data['last_name'])) {
+                            $member->name = ($data['first_name'] ?? $member->first_name) . ' ' . ($data['last_name'] ?? $member->last_name);
+                        }
+
+                        $member->save();
+                        
+                        $results['success'][] = [
+                            'temp_id' => $tempId,
+                            'server_id' => $member->id,
+                            'member' => $member,
+                        ];
+                    }
+                } catch (\Exception $e) {
+                    $results['failed'][] = [
+                        'temp_id' => $item['temp_id'],
+                        'error' => $e->getMessage(),
+                    ];
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'code' => 1,
+                'message' => 'Sync completed',
+                'data' => $results,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'code' => 0,
+                'message' => 'Sync failed: ' . $e->getMessage(),
                 'data' => null,
             ], 500);
         }

@@ -125,12 +125,15 @@ Route::prefix('ffs-groups')->group(function () {
 // Members Management
 use App\Http\Controllers\MemberController;
 
-Route::prefix('members')->group(function () {
+Route::prefix('members')->middleware(EnsureTokenIsValid::class)->group(function () {
     Route::get('/', [MemberController::class, 'index']); // List all members with filtering
     Route::get('/{id}', [MemberController::class, 'show']); // Get single member
-    Route::post('/', [MemberController::class, 'store'])->middleware(EnsureTokenIsValid::class); // Register new member
-    Route::post('/{id}/send-credentials', [MemberController::class, 'sendCredentials'])->middleware(EnsureTokenIsValid::class); // Send credentials SMS
-    Route::post('/{id}/send-welcome', [MemberController::class, 'sendWelcomeMessage'])->middleware(EnsureTokenIsValid::class); // Send welcome SMS
+    Route::post('/', [MemberController::class, 'store']); // Register new member
+    Route::put('/{id}', [MemberController::class, 'update']); // Update member
+    Route::delete('/{id}', [MemberController::class, 'destroy']); // Delete member
+    Route::post('/sync', [MemberController::class, 'sync']); // Bulk sync from offline
+    Route::post('/{id}/send-credentials', [MemberController::class, 'sendCredentials']); // Send credentials SMS
+    Route::post('/{id}/send-welcome', [MemberController::class, 'sendWelcomeMessage']); // Send welcome SMS
 });
 
 // Locations (Districts, Subcounties, Parishes)
