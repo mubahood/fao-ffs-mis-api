@@ -1,0 +1,11 @@
+Name,Phone,Email,Gender,Group Name,Role
+John Doe,0700123456,john@example.com,Male,Mukono Farmers Group,member
+Jane Smith,0750234567,jane@example.com,Female,Kampala FFS,chairperson
+Peter Okello,0770345678,peter@example.com,Male,Lira Agriculture Co-op,vice-chairperson
+Mary Namukasa,0780456789,mary@example.com,Female,Jinja Farmers Union,secretary
+David Musoke,0790567890,david@example.com,Male,Entebbe FFS Group,treasurer
+Sarah Akello,0700678901,,Female,Gulu Farmers,member
+James Kityo,0750789012,james@example.com,Male,Mbale Agriculture,member
+Grace Nabirye,0770890123,grace@example.com,Female,Masaka FFS,member
+Robert Onen,0780901234,robert@example.com,Male,Soroti Co-operative,member
+Betty Namaganda,0790012345,betty@example.com,Female,Mukono Farmers Group,member

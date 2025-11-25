@@ -19,14 +19,14 @@ class MemberController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Members Management';
+    protected $title = 'FFS Group Members';
 
     /**
      * Get dynamic title based on URL
      */
     protected function title()
     {
-        return 'Members Management';
+        return 'FFS Group Members';
     }
 
     /**
@@ -38,11 +38,10 @@ class MemberController extends AdminController
     {
         $grid = new Grid(new User());
         
-        // Filter only members (not admins)
-        $grid->model()->where('user_type', 'Customer')->orderBy('created_at', 'desc');
+        
+        $grid->quickSearch('name', 'phone_number', 'phone_number_2')->placeholder('Search member name, phone...');
 
-        // Disable batch actions and deletion
-        $grid->disableBatchActions();
+        // Disable batch deletion but allow batch export
         $grid->actions(function ($actions) {
             $actions->disableDelete();
         });
@@ -51,101 +50,152 @@ class MemberController extends AdminController
         $grid->filter(function($filter){
             $filter->disableIdFilter();
             
-            $filter->equal('group_id', 'Group')->select(FfsGroup::orderBy('name')->pluck('name', 'id'));
-            $filter->equal('district_id', 'District')->select(Location::where('type', 'District')->pluck('name', 'id'));
-            $filter->like('name', 'Member Name');
-            $filter->like('phone_number', 'Phone');
-            $filter->equal('sex', 'Gender')->select(['Male' => 'Male', 'Female' => 'Female']);
-            $filter->equal('status', 'Status')->select([
-                'Active' => 'Active',
-                'Inactive' => 'Inactive',
-                'Pending' => 'Pending',
+            // Group filters
+            $filter->equal('group_id', 'FFS Group')->select(function() {
+                return FfsGroup::where('status', 'Active')
+                    ->orderBy('name')
+                    ->pluck('name', 'id');
+            });
+            
+            $filter->equal('is_group_admin', 'Position')->select([
+                'Yes' => 'Chairperson',
+                'No' => 'Regular Member',
+            ]);
+            
+            // Location filters
+            $filter->equal('district_id', 'District')->select(function() {
+                return Location::where('parent', 0)
+                    ->orderBy('name')
+                    ->pluck('name', 'id');
+            });
+            
+            $filter->equal('subcounty_id', 'Subcounty')->select(function() {
+                return Location::where('parent', '>', 0)
+                    ->orderBy('name')
+                    ->pluck('name', 'id');
+            });
+            
+            // Demographics
+            $filter->equal('sex', 'Gender')->select([
+                'Male' => 'Male', 
+                'Female' => 'Female'
+            ]);
+            
+            $filter->between('dob', 'Age Range')->date();
+            
+            // Account status
+            $filter->equal('status', 'Account Status')->select([
+                '1' => 'Active',
+                '0' => 'Inactive',
             ]);
         });
         
         // Columns
-        $grid->column('id', 'ID')->sortable()->hide();
-        $grid->column('member_code', 'Code')->label('primary')->copyable()->sortable();
+        $grid->column('id', 'ID')->sortable();
         
-        $grid->column('avatar', 'Photo')
-            ->lightbox(['width' => 50, 'height' => 50]);
+        $grid->column('avatar', 'Photo')->image('', 50, 50);
         
-        $grid->column('name', 'Member Name')->display(function($name) {
-            $firstName = $this->first_name ?? '';
-            $lastName = $this->last_name ?? '';
-            $fullName = trim($firstName . ' ' . $lastName) ?: $name;
-            return "<strong>$fullName</strong>";
+        $grid->column('name', 'Full Name')->display(function() {
+            $name = $this->name ?: ($this->first_name . ' ' . $this->last_name);
+            $html = "<strong>{$name}</strong><br>";
+            
+            // Show position badge if chairperson
+            if ($this->is_group_admin == 'Yes') {
+                $html .= '<span class="label label-primary"><i class="fa fa-star"></i> Chairperson</span>';
+            } elseif ($this->is_group_secretary == 'Yes') {
+                $html .= '<span class="label label-info"><i class="fa fa-pencil"></i> Secretary</span>';
+            } elseif ($this->is_group_treasurer == 'Yes') {
+                $html .= '<span class="label label-warning"><i class="fa fa-money"></i> Treasurer</span>';
+            }
+            
+            return $html;
         })->sortable();
         
-        $grid->column('sex', 'Gender')->label([
-            'Male' => 'info',
-            'Female' => 'danger',
-        ])->sortable();
-        
-        $grid->column('phone_number', 'Phone')->sortable();
-        
-        $grid->column('district', 'District')->display(function() {
-            if ($this->district_id) {
-                $district = Location::find($this->district_id);
-                return $district ? $district->name : 'N/A';
+        $grid->column('phone_number', 'Contact')->display(function() {
+            $html = '<i class="fa fa-phone text-success"></i> ' . $this->phone_number;
+            if ($this->phone_number_2) {
+                $html .= '<br><i class="fa fa-phone text-muted"></i> ' . $this->phone_number_2;
             }
-            return 'N/A';
+            return $html;
         });
         
-        $grid->column('village', 'Village');
-        
-        $grid->column('group', 'Group')->display(function() {
-            return $this->group ? $this->group->name : '<span style="color: #999;">Not Assigned</span>';
-        });
+        $grid->column('sex', 'Gender')->using([
+            'Male' => 'Male',
+            'Female' => 'Female',
+        ])->dot([
+            'Male' => 'primary',
+            'Female' => 'danger',
+        ], 'warning')->sortable();
         
         $grid->column('dob', 'Age')->display(function($dob) {
-            if (!$dob) return 'N/A';
+            if (!$dob) return '-';
             $age = \Carbon\Carbon::parse($dob)->age;
             return $age . ' yrs';
         })->sortable();
         
-        $grid->column('status', 'Status')->label([
-            'Active' => 'success',
-            'Inactive' => 'default',
-            'Pending' => 'warning',
-        ])->sortable();
+        $grid->column('group.name', 'FFS Group')->display(function() {
+            if (!$this->group) {
+                return '<span class="text-muted">Not Assigned</span>';
+            }
+            
+            $type = $this->group->type;
+            $typeLabel = [
+                'FFS' => 'success',
+                'FBS' => 'primary', 
+                'VSLA' => 'warning',
+                'Association' => 'info',
+            ];
+            
+            return '<span class="label label-' . ($typeLabel[$type] ?? 'default') . '">' . $type . '</span><br>' . 
+                   '<strong>' . $this->group->name . '</strong>';
+        });
         
-        $grid->column('created_at', 'Registered')->display(function($date) {
-            return date('d M Y', strtotime($date));
+        $grid->column('location', 'Location')->display(function() {
+            $parts = [];
+            if ($this->village) $parts[] = $this->village;
+            if ($this->parish_id) {
+                $parish = Location::find($this->parish_id);
+                if ($parish) $parts[] = $parish->name;
+            }
+            if ($this->subcounty_id) {
+                $subcounty = Location::find($this->subcounty_id);
+                if ($subcounty) $parts[] = $subcounty->name;
+            }
+            if ($this->district_id) {
+                $district = Location::find($this->district_id);
+                if ($district) $parts[] = '<strong>' . $district->name . '</strong>';
+            }
+            return implode(', ', $parts) ?: 'N/A';
+        });
+        
+        $grid->column('status', 'Status')->display(function() {
+            return $this->status == 1 ? 
+                '<span class="label label-success">Active</span>' : 
+                '<span class="label label-default">Inactive</span>';
         })->sortable();
         
-        // Add SMS action column with two buttons
-        $grid->column('sms_actions', 'SMS')->display(function () {
-            $userId = $this->id;
-            $phone = $this->phone_number;
-            
-            if (empty($phone)) {
-                return '<span class="text-muted"><i class="fa fa-phone-slash"></i> No Phone</span>';
+        $grid->column('created_at', 'Registered')->display(function($date) {
+            return \Carbon\Carbon::parse($date)->format('d M Y');
+        })->sortable();
+        
+        // SMS Actions
+        $grid->column('actions', 'SMS Actions')->display(function () {
+            if (empty($this->phone_number)) {
+                return '<span class="text-muted"><i class="fa fa-phone-slash"></i></span>';
             }
             
             return '
-                <a href="' . admin_url('ffs-members/' . $userId . '/send-credentials') . '" 
+                <a href="' . admin_url('ffs-members/' . $this->id . '/send-credentials') . '" 
                    class="btn btn-xs btn-success" 
-                   title="Send login credentials via SMS">
-                    <i class="fa fa-key"></i> Credentials
+                   title="Send login credentials">
+                    <i class="fa fa-key"></i>
                 </a>
-                <br style="margin: 2px 0;">
-                <a href="' . admin_url('ffs-members/' . $userId . '/send-welcome') . '" 
+                <a href="' . admin_url('ffs-members/' . $this->id . '/send-welcome') . '" 
                    class="btn btn-xs btn-info" 
-                   title="Send welcome message via SMS"
-                   style="margin-top: 3px;">
-                    <i class="fa fa-envelope"></i> Welcome
+                   title="Send welcome message">
+                    <i class="fa fa-envelope"></i>
                 </a>
             ';
-        })->width(120);
-        
-        // Quick create
-        $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
-            $create->text('first_name', 'First Name')->required();
-            $create->text('last_name', 'Last Name')->required();
-            $create->text('phone_number', 'Phone Number')->required();
-            $create->select('sex', 'Gender')->options(['Male' => 'Male', 'Female' => 'Female'])->required();
-            $create->select('group_id', 'Group')->options(FfsGroup::where('status', 'Active')->orderBy('name')->pluck('name', 'id'));
         });
 
         return $grid;
@@ -161,70 +211,105 @@ class MemberController extends AdminController
     {
         $show = new Show(User::findOrFail($id));
         
-        $show->panel()->style('primary')->title('Member Details');
+        $show->panel()->style('success')->title('Member Profile');
+
+        // Profile Photo
+        $show->field('avatar', 'Photo')->image('', 150, 150);
 
         // Basic Information
-        $show->divider('Basic Information');
-        $show->field('member_code', 'Member Code')->label('primary');
-        $show->field('first_name', 'First Name');
-        $show->field('last_name', 'Last Name');
-        $show->field('sex', 'Gender');
+        $show->divider('Personal Information');
+        $show->field('name', 'Full Name');
+        $show->field('sex', 'Gender')->using(['Male' => 'Male', 'Female' => 'Female']);
         $show->field('dob', 'Date of Birth')->as(function($date) {
-            return $date ? date('d M Y', strtotime($date)) : 'N/A';
+            if (!$date) return 'N/A';
+            $age = \Carbon\Carbon::parse($date)->age;
+            return date('d M Y', strtotime($date)) . " ({$age} years old)";
         });
         $show->field('marital_status', 'Marital Status');
         $show->field('education_level', 'Education Level');
+        $show->field('occupation', 'Occupation');
         
         // Contact Information
-        $show->divider('Contact Information');
-        $show->field('phone_number', 'Primary Phone');
-        $show->field('phone_number_2', 'Secondary Phone');
-        $show->field('email', 'Email');
-        $show->field('emergency_contact_name', 'Emergency Contact');
-        $show->field('emergency_contact_phone', 'Emergency Phone');
+        $show->divider('Contact Details');
+        $show->field('phone_number', 'Primary Phone')->as(function($phone) {
+            return $phone ? '<a href="tel:' . $phone . '">' . $phone . '</a>' : 'N/A';
+        })->unescape();
+        $show->field('phone_number_2', 'Secondary Phone')->as(function($phone) {
+            return $phone ? '<a href="tel:' . $phone . '">' . $phone . '</a>' : 'N/A';
+        })->unescape();
+        $show->field('email', 'Email Address')->as(function($email) {
+            return $email ? '<a href="mailto:' . $email . '">' . $email . '</a>' : 'N/A';
+        })->unescape();
         
-        // Group Assignment
-        $show->divider('Group Assignment');
-        $show->field('group', 'Group')->as(function() {
-            return $this->group ? $this->group->name : 'Not Assigned';
-        });
+        // FFS Group Information
+        $show->divider('FFS Group Membership');
+        $show->field('group.name', 'Group Name');
+        $show->field('group.type', 'Group Type');
+        $show->field('is_group_admin', 'Position')->using([
+            'Yes' => '⭐ Chairperson',
+            'No' => 'Member',
+        ]);
+        $show->field('is_group_secretary', 'Secretary Role')->using([
+            'Yes' => '✓ Yes',
+            'No' => '✗ No',
+        ]);
+        $show->field('is_group_treasurer', 'Treasurer Role')->using([
+            'Yes' => '✓ Yes',
+            'No' => '✗ No',
+        ]);
         
         // Location
-        $show->divider('Location Information');
-        $show->field('district', 'District')->as(function() {
-            return $this->district ? $this->district->name : 'N/A';
+        $show->divider('Location');
+        $show->field('district_id', 'District')->as(function() {
+            $location = Location::find($this->district_id);
+            return $location ? $location->name : 'N/A';
         });
-        $show->field('subcounty', 'Subcounty')->as(function() {
-            return $this->subcounty ? $this->subcounty->name : 'N/A';
+        $show->field('subcounty_id', 'Subcounty')->as(function() {
+            $location = Location::find($this->subcounty_id);
+            return $location ? $location->name : 'N/A';
         });
-        $show->field('parish', 'Parish')->as(function() {
-            return $this->parish ? $this->parish->name : 'N/A';
+        $show->field('parish_id', 'Parish')->as(function() {
+            $location = Location::find($this->parish_id);
+            return $location ? $location->name : 'N/A';
         });
         $show->field('village', 'Village');
         $show->field('address', 'Home Address');
         
-        // Family Information
-        $show->divider('Family Information');
+        // Household Information
+        $show->divider('Household Information');
+        $show->field('household_size', 'Household Size')->as(function($size) {
+            return $size ? $size . ' people' : 'N/A';
+        });
         $show->field('father_name', "Father's Name");
         $show->field('mother_name', "Mother's Name");
-        $show->field('household_size', 'Household Size');
+        
+        // Emergency Contact
+        $show->divider('Emergency Contact');
+        $show->field('emergency_contact_name', 'Contact Name');
+        $show->field('emergency_contact_phone', 'Contact Phone')->as(function($phone) {
+            return $phone ? '<a href="tel:' . $phone . '">' . $phone . '</a>' : 'N/A';
+        })->unescape();
         
         // Additional Information
         $show->divider('Additional Information');
-        $show->field('occupation', 'Occupation');
-        $show->field('skills', 'Skills');
-        $show->field('disabilities', 'Disabilities');
-        $show->field('remarks', 'Remarks');
+        $show->field('skills', 'Skills & Expertise');
+        $show->field('disabilities', 'Special Needs/Disabilities');
+        $show->field('remarks', 'Additional Notes');
         
-        // Photo
-        $show->field('avatar', 'Photo')->image();
-        
-        // Account Status
-        $show->divider('Account Information');
-        $show->field('username', 'Username');
-        $show->field('status', 'Status');
-        $show->field('created_at', 'Registered')->as(function($date) {
-            return date('d M Y H:i:s', strtotime($date));
+        // Account Information
+        $show->divider('Account Status');
+        $show->field('username', 'Login Username');
+        $show->field('status', 'Account Status')->using([
+            '1' => '✓ Active',
+            '0' => '✗ Inactive',
+        ]);
+        $show->field('created_at', 'Registration Date')->as(function($date) {
+            return \Carbon\Carbon::parse($date)->format('d M Y H:i');
+        });
+        $show->field('registered_by_id', 'Registered By')->as(function($id) {
+            if (!$id) return 'N/A';
+            $user = User::find($id);
+            return $user ? $user->name : 'Unknown';
         });
 
         return $show;
@@ -252,33 +337,34 @@ class MemberController extends AdminController
         
         // Validate phone number
         if (empty($user->phone_number)) {
-            admin_toastr('Member has no phone number', 'error');
+            admin_toastr('Member has no phone number on file', 'error');
             return redirect()->back();
         }
         
-        // SMS message - Login credentials (under 160 chars)
-        $message = "FAO FFS-MIS Login\n";
-        $message .= "Username: " . $user->username . "\n";
-        $message .= "Password: " . $user->phone_number . "\n";
-        $message .= "Visit: localhost:8888";
+        // Prepare SMS message
+        $firstName = $user->first_name ?: explode(' ', $user->name)[0];
+        $username = $user->username;
+        $password = preg_replace('/[^0-9]/', '', $user->phone_number); // Use phone as default password
+        
+        $message = "FAO FFS-MIS - Login Credentials\n\n";
+        $message .= "Dear {$firstName},\n";
+        $message .= "Username: {$username}\n";
+        $message .= "Password: {$password}\n\n";
+        $message .= "Download the app from Play Store or contact your group administrator.";
         
         try {
-            // Send SMS using Utils service
-            $response = \App\Models\Utils::sendSMS($user->phone_number, $message);
+            $response = \App\Models\Utils::send_sms($user->phone_number, $message);
             
-            // Log the SMS
-            Log::info('=== CREDENTIALS SMS SENT ===', [
+            Log::info('Credentials SMS sent', [
                 'member_id' => $user->id,
                 'member_name' => $user->name,
                 'phone' => $user->phone_number,
-                'message_length' => strlen($message),
-                'response' => $response,
             ]);
             
-            admin_toastr('Credentials SMS sent to ' . $user->name, 'success');
+            admin_toastr("Login credentials sent to {$user->name}", 'success');
             
         } catch (\Exception $e) {
-            Log::error('=== CREDENTIALS SMS FAILED ===', [
+            Log::error('Credentials SMS failed', [
                 'member_id' => $user->id,
                 'error' => $e->getMessage(),
             ]);
@@ -298,33 +384,32 @@ class MemberController extends AdminController
         
         // Validate phone number
         if (empty($user->phone_number)) {
-            admin_toastr('Member has no phone number', 'error');
+            admin_toastr('Member has no phone number on file', 'error');
             return redirect()->back();
         }
         
-        // SMS message - Welcome message (under 160 chars)
-        $message = "Welcome to FAO FFS-MIS!\n";
-        $message .= "Dear " . $user->first_name . ",\n";
-        $message .= "You are now registered as a member.\n";
-        $message .= "Thank you for joining us!";
+        // Prepare welcome message
+        $firstName = $user->first_name ?: explode(' ', $user->name)[0];
+        $groupName = $user->group ? $user->group->name : 'your group';
+        
+        $message = "Welcome to FAO FFS-MIS!\n\n";
+        $message .= "Dear {$firstName},\n";
+        $message .= "You have been successfully registered as a member of {$groupName}.\n\n";
+        $message .= "You will receive login credentials shortly. Thank you for joining us in transforming agriculture in Karamoja!";
         
         try {
-            // Send SMS using Utils service
-            $response = \App\Models\Utils::sendSMS($user->phone_number, $message);
+            $response = \App\Models\Utils::send_sms($user->phone_number, $message);
             
-            // Log the SMS
-            Log::info('=== WELCOME SMS SENT ===', [
+            Log::info('Welcome SMS sent', [
                 'member_id' => $user->id,
                 'member_name' => $user->name,
                 'phone' => $user->phone_number,
-                'message_length' => strlen($message),
-                'response' => $response,
             ]);
             
-            admin_toastr('Welcome SMS sent to ' . $user->name, 'success');
+            admin_toastr("Welcome message sent to {$user->name}", 'success');
             
         } catch (\Exception $e) {
-            Log::error('=== WELCOME SMS FAILED ===', [
+            Log::error('Welcome SMS failed', [
                 'member_id' => $user->id,
                 'error' => $e->getMessage(),
             ]);
@@ -342,19 +427,13 @@ class MemberController extends AdminController
      */
     protected function form()
     {
-        Log::info('=== MEMBER FORM METHOD CALLED ===', [
-            'request_method' => request()->method(),
-            'url' => request()->url(),
-            'all_input' => request()->all(),
-        ]);
-        
         $form = new Form(new User());
         
-        // Hidden fields
+        // Hidden fields - set user type to Customer for members
         $form->hidden('user_type')->default('Customer');
         
-        // Basic Information
-        $form->divider('Basic Information');
+        // Personal Information
+        $form->divider('Personal Information');
         
         $form->row(function ($row) {
             $row->width(6)->text('first_name', 'First Name')->required();
@@ -362,162 +441,223 @@ class MemberController extends AdminController
         });
         
         $form->row(function ($row) {
-            $row->width(6)->radio('sex', 'Gender')->options(['Male' => 'Male', 'Female' => 'Female'])->default('Male');
-            $row->width(6)->date('dob', 'Date of Birth');
+            $row->width(4)->radio('sex', 'Gender')
+                ->options(['Male' => 'Male', 'Female' => 'Female'])
+                ->default('Male')
+                ->required();
+            
+            $row->width(4)->date('dob', 'Date of Birth')
+                ->help('Member\'s birth date');
+            
+            $row->width(4)->radio('marital_status', 'Marital Status')
+                ->options([
+                    'Single' => 'Single',
+                    'Married' => 'Married',
+                    'Divorced' => 'Divorced',
+                    'Widowed' => 'Widowed',
+                    'Separated' => 'Separated',
+                ])
+                ->default('Single');
         });
         
         $form->row(function ($row) {
-            $row->width(6)->radio('marital_status', 'Marital Status')->options([
-                'Single' => 'Single',
-                'Married' => 'Married',
-                'Divorced' => 'Divorced',
-                'Widowed' => 'Widowed',
-            ]);
-            $row->width(6)->radio('education_level', 'Education Level')->options([
-                'None' => 'None',
-                'Primary' => 'Primary',
-                'Secondary' => 'Secondary',
-                'Tertiary' => 'Tertiary/University',
-            ]);
+            $row->width(6)->select('education_level', 'Education Level')
+                ->options([
+                    'None' => 'No Formal Education',
+                    'Primary' => 'Primary (P1-P7)',
+                    'O-Level' => 'O-Level (S1-S4)',
+                    'A-Level' => 'A-Level (S5-S6)',
+                    'Certificate' => 'Certificate',
+                    'Diploma' => 'Diploma',
+                    'Degree' => 'Bachelor\'s Degree',
+                    'Masters' => 'Master\'s Degree',
+                    'PhD' => 'PhD',
+                ]);
+            
+            $row->width(6)->text('occupation', 'Primary Occupation')
+                ->help('E.g., Farmer, Trader, Teacher');
         });
         
-        $form->row(function ($row) {
-            $row->width(6)->decimal('household_size', 'Household Size')->help('Number of people in household');
-            $row->width(6)->text('occupation', 'Occupation');
-        });
+        $form->image('avatar', 'Profile Photo')
+            ->help('Upload member photo (JPG, PNG - Max 2MB)')
+            ->removable();
         
         // Contact Information
         $form->divider('Contact Information');
         
         $form->row(function ($row) {
-            $row->width(6)->text('phone_number', 'Primary Phone')->rules('unique:users,phone_number,{{id}}');
-            $row->width(6)->text('phone_number_2', 'Secondary Phone');
+            $row->width(6)->mobile('phone_number', 'Primary Phone Number')
+                ->options(['mask' => '+256 999 999999'])
+                ->required()
+                ->creationRules(['required', 'unique:users,phone_number'])
+                ->updateRules(['required', 'unique:users,phone_number,{{id}}'])
+                ->help('Format: +256 XXX XXXXXX');
+            
+            $row->width(6)->mobile('phone_number_2', 'Alternative Phone')
+                ->options(['mask' => '+256 999 999999'])
+                ->help('Optional secondary contact');
+        });
+        
+        $form->email('email', 'Email Address')
+            ->help('Optional but recommended for account recovery');
+        
+        // FFS Group Assignment
+        $form->divider('FFS Group Membership');
+        
+        $form->select('group_id', 'Assign to FFS Group')
+            ->options(function() {
+                return FfsGroup::where('status', 'Active')
+                    ->orderBy('type')
+                    ->orderBy('name')
+                    ->get()
+                    ->mapWithKeys(function($group) {
+                        return [$group->id => "[{$group->type}] {$group->name}"];
+                    });
+            })
+            ->help('Select the FFS/VSLA/Association group this member belongs to');
+        
+        $form->row(function ($row) {
+            $row->width(4)->radio('is_group_admin', 'Chairperson?')
+                ->options(['Yes' => 'Yes', 'No' => 'No'])
+                ->default('No')
+                ->help('Is this member the group chairperson?');
+            
+            $row->width(4)->radio('is_group_secretary', 'Secretary?')
+                ->options(['Yes' => 'Yes', 'No' => 'No'])
+                ->default('No')
+                ->help('Is this member the group secretary?');
+            
+            $row->width(4)->radio('is_group_treasurer', 'Treasurer?')
+                ->options(['Yes' => 'Yes', 'No' => 'No'])
+                ->default('No')
+                ->help('Is this member the group treasurer?');
+        });
+        
+        // Location Information
+        $form->divider('Location Details');
+        
+        $form->row(function ($row) {
+            $row->width(6)->select('district_id', 'District')
+                ->options(function() {
+                    return Location::where('parent', 0)
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })
+                ->load('subcounty_id', '/api/locations/subcounties');
+            
+            $row->width(6)->select('subcounty_id', 'Subcounty')
+                ->load('parish_id', '/api/locations/parishes');
         });
         
         $form->row(function ($row) {
-            $row->width(6)->email('email', 'Email Address');
-            $row->width(6)->text('emergency_contact_name', 'Emergency Contact Name');
-        });
-        
-        $form->row(function ($row) {
-            $row->width(6)->mobile('emergency_contact_phone', 'Emergency Contact Phone');
-            $row->width(6)->text('village', 'Village');
-        });
-        
-        // Group Assignment & Location
-        $form->divider('Group Assignment & Location');
-        
-        $groups = FfsGroup::where('status', 'Active')->orderBy('name')->get()->pluck('name', 'id');
-        $districts = Location::where('type', 'District')->pluck('name', 'id');
-        
-        $form->row(function ($row) use ($groups, $districts) {
-            $row->width(6)->select('group_id', 'Assign to Group')->options($groups)->help('Optional - can be assigned later');
-            $row->width(6)->select('district_id', 'District')->options($districts);
-        });
-        
-        $form->row(function ($row) {
-            $row->width(6)->select('subcounty_id', 'Subcounty');
             $row->width(6)->select('parish_id', 'Parish');
+            $row->width(6)->text('village', 'Village/LC1')
+                ->help('Name of village or LC1');
         });
         
+        $form->textarea('address', 'Detailed Address')
+            ->rows(2)
+            ->help('Specific location details, landmarks, etc.');
+        
+        // Household Information
+        $form->divider('Household Information');
+        
         $form->row(function ($row) {
-            $row->width(6)->text('address', 'Home Address');
-            $row->width(6)->textarea('skills', 'Skills')->rows(2);
+            $row->width(4)->number('household_size', 'Household Size')
+                ->default(1)
+                ->min(1)
+                ->help('Total number of people in household');
+            
+            $row->width(4)->text('father_name', 'Father\'s Name');
+            $row->width(4)->text('mother_name', 'Mother\'s Name');
         });
         
-        // Family Information
-        $form->divider('Family Information');
+        // Emergency Contact
+        $form->divider('Emergency Contact');
         
         $form->row(function ($row) {
-            $row->width(6)->text('father_name', "Father's Name");
-            $row->width(6)->text('mother_name', "Mother's Name");
+            $row->width(6)->text('emergency_contact_name', 'Contact Person Name');
+            $row->width(6)->mobile('emergency_contact_phone', 'Contact Person Phone')
+                ->options(['mask' => '+256 999 999999']);
         });
         
         // Additional Information
         $form->divider('Additional Information');
         
         $form->row(function ($row) {
-            $row->width(6)->textarea('disabilities', 'Disabilities')->rows(2);
-            $row->width(6)->textarea('remarks', 'Remarks')->rows(2);
+            $row->width(6)->textarea('skills', 'Skills & Expertise')
+                ->rows(2)
+                ->help('Agricultural skills, training received, etc.');
+            
+            $row->width(6)->textarea('disabilities', 'Special Needs')
+                ->rows(2)
+                ->help('Any disabilities or special accommodations needed');
         });
         
-        $form->row(function ($row) {
-            $row->width(6)->image('avatar', 'Profile Photo');
-        });
+        $form->textarea('remarks', 'Additional Notes')
+            ->rows(3)
+            ->help('Any other relevant information');
         
         // Account Settings
         $form->divider('Account Settings');
         
         $form->row(function ($row) {
-            $row->width(6)->text('username', 'Username')
-                ->creationRules(['unique:users,username'])
-                ->updateRules(['unique:users,username,{{id}}'])
-                ->help('Will auto-fill with phone number if left blank');
+            $row->width(6)->text('username', 'Login Username')
+                ->creationRules(['nullable', 'unique:users,username'])
+                ->updateRules(['nullable', 'unique:users,username,{{id}}'])
+                ->help('Leave blank to auto-generate from phone number');
             
-            $row->width(6)->radio('status', 'Status')->options([
-                'Active' => 'Active',
-                'Inactive' => 'Inactive',
-                'Pending' => 'Pending',
-            ])->default('Active');
+            $row->width(6)->radio('status', 'Account Status')
+                ->options(['1' => 'Active', '0' => 'Inactive'])
+                ->default('1')
+                ->help('Active accounts can login to mobile app');
         });
         
         if ($form->isCreating()) {
-            $form->password('password', 'Password')
+            $form->password('password', 'Set Password')
                 ->rules('nullable|min:6')
-                ->help('Leave blank to auto-set as phone number');
+                ->help('Leave blank to use phone number as default password');
         } else {
-            $form->password('password', 'New Password')
+            $form->password('password', 'Change Password')
                 ->rules('nullable|min:6')
                 ->help('Leave blank to keep current password');
         }
         
         // Saving logic
         $form->saving(function (Form $form) {
-            Log::info('=== MEMBER FORM SAVING ===', [
-                'isCreating' => $form->isCreating(),
-                'user_id' => $form->model()->id ?? 'NEW',
-                'first_name' => $form->first_name,
-                'last_name' => $form->last_name,
-                'phone' => $form->phone_number,
-                'group_id' => $form->group_id,
+            // Build full name from first_name and last_name
+            $nameParts = array_filter([
+                $form->first_name,
+                $form->last_name
             ]);
-            
-            // Auto-generate full name
-            if ($form->first_name && $form->last_name) {
-                $form->name = trim($form->first_name . ' ' . $form->last_name);
-            }
+            $form->name = implode(' ', $nameParts);
 
             // For new members
             if ($form->isCreating()) {
-                // Set username to phone if empty
-                if (!$form->username && $form->phone_number) {
-                    $form->username = $form->phone_number;
-                } elseif (!$form->username) {
-                    $form->username = 'user_' . time();
+                // Auto-generate username from phone if empty
+                if (empty($form->username) && !empty($form->phone_number)) {
+                    $form->username = preg_replace('/[^0-9]/', '', $form->phone_number);
+                } elseif (empty($form->username)) {
+                    $form->username = 'member_' . time();
                 }
                 
-                // Set password to phone if empty
-                if (!$form->password && $form->phone_number) {
-                    $form->password = bcrypt($form->phone_number);
-                } elseif (!$form->password) {
-                    $form->password = bcrypt('123456');
-                } elseif ($form->password) {
+                // Set default password to phone number
+                if (empty($form->password)) {
+                    $plainPassword = !empty($form->phone_number) ? 
+                        preg_replace('/[^0-9]/', '', $form->phone_number) : 
+                        '123456';
+                    $form->password = bcrypt($plainPassword);
+                } else {
                     $form->password = bcrypt($form->password);
                 }
                 
-                // Set created_by_id
+                // Track who created this member
                 $form->created_by_id = \Encore\Admin\Facades\Admin::user()->id;
                 $form->registered_by_id = \Encore\Admin\Facades\Admin::user()->id;
                 
-                Log::info('Creating new member with username: ' . $form->username);
             } else {
-                Log::info('Updating member', [
-                    'id' => $form->model()->id,
-                    'changes' => $form->model()->getDirty()
-                ]);
-                
                 // For updates, only hash password if provided
-                if ($form->password) {
+                if (!empty($form->password)) {
                     $form->password = bcrypt($form->password);
                 } else {
                     unset($form->password);
@@ -526,20 +666,8 @@ class MemberController extends AdminController
         });
         
         $form->saved(function (Form $form) {
-            Log::info('=== MEMBER SAVED ===', [
-                'user_id' => $form->model()->id,
-                'name' => $form->model()->name,
-                'group_id' => $form->model()->group_id,
-            ]);
-        });
-        
-        // Ignore password confirmation
-        $form->ignore(['password_confirmation']);
-        
-        // Form configuration
-        $form->disableViewCheck();
-        $form->tools(function (Form\Tools $tools) {
-            $tools->disableView();
+            $action = $form->isCreating() ? 'created' : 'updated';
+            admin_toastr("Member {$form->model()->name} {$action} successfully!", 'success');
         });
 
         return $form;

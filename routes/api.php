@@ -73,6 +73,7 @@ Route::POST("users/register", [ApiAuthController::class, "register"]);
 // VSLA ONBOARDING ROUTES
 // ========================================
 use App\Http\Controllers\VslaOnboardingController;
+use App\Http\Controllers\Api\VslaOnboardingDataController;
 
 Route::prefix('vsla-onboarding')->group(function () {
     // Public routes (no authentication required)
@@ -86,6 +87,13 @@ Route::prefix('vsla-onboarding')->group(function () {
         Route::post('/register-main-members', [VslaOnboardingController::class, 'registerMainMembers']);
         Route::post('/create-cycle', [VslaOnboardingController::class, 'createSavingsCycle']);
         Route::post('/complete', [VslaOnboardingController::class, 'completeOnboarding']);
+        
+        // Data fetching endpoints for pre-filling forms
+        Route::get('/data/chairperson', [VslaOnboardingDataController::class, 'getChairpersonData']);
+        Route::get('/data/group', [VslaOnboardingDataController::class, 'getGroupData']);
+        Route::get('/data/main-members', [VslaOnboardingDataController::class, 'getMainMembersData']);
+        Route::get('/data/savings-cycle', [VslaOnboardingDataController::class, 'getSavingsCycleData']);
+        Route::get('/data/all', [VslaOnboardingDataController::class, 'getAllOnboardingData']);
     });
 });
 

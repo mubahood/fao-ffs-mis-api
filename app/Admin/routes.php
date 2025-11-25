@@ -29,6 +29,11 @@ Route::group([
     $router->resource('product-orders', ProductOrderController::class);
 
     // ========================================
+    // USER IMPORT MANAGEMENT
+    // ========================================
+    $router->resource('import-tasks', ImportTaskController::class);
+
+    // ========================================
     // INVESTMENT MANAGEMENT - Admin Only (Financial Operations)
     // ========================================
 

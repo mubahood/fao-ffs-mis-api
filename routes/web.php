@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\UserCredentialsController;
 use App\Http\Middleware\Authenticate;
@@ -25,6 +26,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/auth/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
+
+/*
+|--------------------------------------------------------------------------
+| Import Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/import/validate/{id}', [ImportController::class, 'validateImport'])->name('import.validate');
+Route::get('/import/process/{id}', [ImportController::class, 'process'])->name('import.process');
 
 //migrate
 Route::get('/migrate', function () {

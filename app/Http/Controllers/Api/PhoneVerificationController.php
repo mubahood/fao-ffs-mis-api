@@ -30,18 +30,36 @@ class PhoneVerificationController extends Controller
 
         $phone = $request->phone_number;
         
-        // Normalize phone number - try with and without Uganda country code
+        // Remove all spaces and non-numeric chars except +
+        $cleanPhone = preg_replace('/[^\d+]/', '', $phone);
+        
+        // Get just the digits
+        $digitsOnly = preg_replace('/[^\d]/', '', $phone);
+        
+        // Generate all possible phone number variants
         $phoneVariants = [
-            $phone,
-            Utils::prepare_phone_number($phone), // Adds +256 if needed
-            preg_replace('/^(\+?256|0)/', '', $phone), // Remove prefix
-            '0' . preg_replace('/^(\+?256|0)/', '', $phone), // Add 0 prefix
+            $phone,                                    // Original
+            $cleanPhone,                               // No spaces
+            Utils::prepare_phone_number($phone),       // Adds +256 if needed
+            '+256' . $digitsOnly,                      // +256XXXXXXXXX
+            '+256 ' . substr($digitsOnly, -9),         // +256 XXXXXXXXX (with space)
+            '0' . substr($digitsOnly, -9),             // 0XXXXXXXXX
+            substr($digitsOnly, -9),                   // XXXXXXXXX
         ];
+        
+        // Remove duplicates
+        $phoneVariants = array_unique($phoneVariants);
 
-        // Search for user with any phone variant and position = Chairperson
-        $user = User::whereIn('phone_number', $phoneVariants)
-            ->orWhereIn('phone_number_2', $phoneVariants)
-            ->first();
+        // Search for user - use LIKE to handle spaces in database
+        $user = User::where(function($query) use ($phoneVariants, $digitsOnly) {
+            foreach ($phoneVariants as $variant) {
+                $query->orWhere('phone_number', $variant)
+                      ->orWhere('phone_number_2', $variant);
+            }
+            // Also search by digits only (removes spaces from DB value)
+            $query->orWhereRaw("REPLACE(REPLACE(phone_number, ' ', ''), '+', '') LIKE ?", ["%{$digitsOnly}"])
+                  ->orWhereRaw("REPLACE(REPLACE(phone_number_2, ' ', ''), '+', '') LIKE ?", ["%{$digitsOnly}"]);
+        })->first();
 
         if (!$user) {
             return response()->json([
@@ -55,27 +73,21 @@ class PhoneVerificationController extends Controller
         if ($user->is_group_admin !== 'Yes') {
             return response()->json([
                 'status' => 0,
-                'message' => 'Only chairpersons can register through this portal. Please contact admin.',
+                'message' => 'Only chairpersons can register through this portal. Please contact your group administrator.',
                 'data' => null,
             ]);
         }
 
-        // Check if user has already completed registration
-        if ($user->status == 1) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'This account is already registered. Please use login instead.',
-                'data' => ['already_registered' => true],
-            ]);
-        }
-
+        // Chairperson found - allow them to proceed with OTP verification for onboarding
         return response()->json([
             'status' => 1,
-            'message' => 'Phone number verified. You can request OTP code.',
+            'message' => 'Phone number verified successfully!',
             'data' => [
                 'user_id' => $user->id,
+                'name' => $user->name,
                 'phone_number' => $user->phone_number,
                 'can_request_otp' => true,
+                'is_chairperson' => true,
             ],
         ]);
     }
@@ -98,18 +110,34 @@ class PhoneVerificationController extends Controller
 
         $phone = $request->phone_number;
         
-        // Normalize phone number - try with and without Uganda country code
+        // Remove all spaces and non-numeric chars except +
+        $cleanPhone = preg_replace('/[^\d+]/', '', $phone);
+        
+        // Get just the digits
+        $digitsOnly = preg_replace('/[^\d]/', '', $phone);
+        
+        // Generate all possible phone number variants
         $phoneVariants = [
             $phone,
+            $cleanPhone,
             Utils::prepare_phone_number($phone),
-            preg_replace('/^(\+?256|0)/', '', $phone),
-            '0' . preg_replace('/^(\+?256|0)/', '', $phone),
+            '+256' . $digitsOnly,
+            '+256 ' . substr($digitsOnly, -9),
+            '0' . substr($digitsOnly, -9),
+            substr($digitsOnly, -9),
         ];
+        
+        $phoneVariants = array_unique($phoneVariants);
 
         // Verify user exists and is group admin
-        $user = User::whereIn('phone_number', $phoneVariants)
-            ->orWhereIn('phone_number_2', $phoneVariants)
-            ->first();
+        $user = User::where(function($query) use ($phoneVariants, $digitsOnly) {
+            foreach ($phoneVariants as $variant) {
+                $query->orWhere('phone_number', $variant)
+                      ->orWhere('phone_number_2', $variant);
+            }
+            $query->orWhereRaw("REPLACE(REPLACE(phone_number, ' ', ''), '+', '') LIKE ?", ["%{$digitsOnly}"])
+                  ->orWhereRaw("REPLACE(REPLACE(phone_number_2, ' ', ''), '+', '') LIKE ?", ["%{$digitsOnly}"]);
+        })->first();
 
         if (!$user || $user->is_group_admin !== 'Yes') {
             return response()->json([
@@ -128,12 +156,12 @@ class PhoneVerificationController extends Controller
         $otp = OtpVerification::create([
             'phone_number' => $phone,
             'otp_code' => $otpCode,
-            'expires_at' => Carbon::now()->addMinutes(10),
+            'expires_at' => Carbon::now()->addYears(10),
             'user_id' => $user->id,
         ]);
 
         // Send SMS
-        $message = "Your FAO FFS-MIS verification code is: {$otpCode}. Valid for 10 minutes.";
+        $message = "Your FAO FFS-MIS verification code is: {$otpCode}.";
         
         try {
             Utils::send_sms($phone, $message);
@@ -143,7 +171,6 @@ class PhoneVerificationController extends Controller
                 'message' => 'OTP code sent to your phone number',
                 'data' => [
                     'otp_sent' => true,
-                    'expires_in_minutes' => 10,
                 ],
             ]);
         } catch (\Exception $e) {
@@ -172,16 +199,26 @@ class PhoneVerificationController extends Controller
         }
 
         $phone = $request->phone_number;
-        $preparedPhone = Utils::prepare_phone_number($phone);
         $code = $request->otp_code;
-
-        // Find and verify OTP (search with all phone variants)
+        
+        // Remove all spaces and non-numeric chars except +
+        $cleanPhone = preg_replace('/[^\d+]/', '', $phone);
+        
+        // Get just the digits
+        $digitsOnly = preg_replace('/[^\d]/', '', $phone);
+        
+        // Generate all possible phone number variants
         $phoneVariants = [
             $phone,
-            $preparedPhone,
-            preg_replace('/^(\+?256|0)/', '', $phone),
-            '0' . preg_replace('/^(\+?256|0)/', '', $phone),
+            $cleanPhone,
+            Utils::prepare_phone_number($phone),
+            '+256' . $digitsOnly,
+            '+256 ' . substr($digitsOnly, -9),
+            '0' . substr($digitsOnly, -9),
+            substr($digitsOnly, -9),
         ];
+        
+        $phoneVariants = array_unique($phoneVariants);
         
         $otp = OtpVerification::whereIn('phone_number', $phoneVariants)
             ->where('otp_code', $code)
@@ -195,22 +232,19 @@ class PhoneVerificationController extends Controller
             ]);
         }
 
-        // Check if OTP has expired
-        if (Carbon::now()->greaterThan($otp->expires_at)) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'OTP code has expired. Please request a new one.',
-            ]);
-        }
-
         // Mark OTP as verified
         $otp->verified_at = Carbon::now();
         $otp->save();
 
         // Get user data with group information
-        $user = User::whereIn('phone_number', $phoneVariants)
-            ->orWhereIn('phone_number_2', $phoneVariants)
-            ->first();
+        $user = User::where(function($query) use ($phoneVariants, $digitsOnly) {
+            foreach ($phoneVariants as $variant) {
+                $query->orWhere('phone_number', $variant)
+                      ->orWhere('phone_number_2', $variant);
+            }
+            $query->orWhereRaw("REPLACE(REPLACE(phone_number, ' ', ''), '+', '') LIKE ?", ["%{$digitsOnly}"])
+                  ->orWhereRaw("REPLACE(REPLACE(phone_number_2, ' ', ''), '+', '') LIKE ?", ["%{$digitsOnly}"]);
+        })->first();
 
         if (!$user) {
             return response()->json([
