@@ -486,14 +486,12 @@ class MemberController extends AdminController
         $form->divider('Contact Information');
         
         $form->row(function ($row) {
-            $row->width(6)->mobile('phone_number', 'Primary Phone Number')
-                ->options(['mask' => '+256 999 999999'])
-                ->required()
+            $row->width(6)->text('phone_number', 'Primary Phone Number')
                 ->creationRules(['required', 'unique:users,phone_number'])
                 ->updateRules(['required', 'unique:users,phone_number,{{id}}'])
                 ->help('Format: +256 XXX XXXXXX');
             
-            $row->width(6)->mobile('phone_number_2', 'Alternative Phone')
+            $row->width(6)->text('phone_number_2', 'Alternative Phone')
                 ->options(['mask' => '+256 999 999999'])
                 ->help('Optional secondary contact');
         });

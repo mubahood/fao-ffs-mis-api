@@ -83,6 +83,7 @@ Route::prefix('vsla-onboarding')->group(function () {
     // Protected routes (authentication required)
     Route::middleware(EnsureTokenIsValid::class)->group(function () {
         Route::get('/status', [VslaOnboardingController::class, 'getOnboardingStatus']);
+        Route::post('/update-step', [VslaOnboardingController::class, 'updateOnboardingStep']);
         Route::post('/create-group', [VslaOnboardingController::class, 'createVslaGroup']);
         Route::post('/register-main-members', [VslaOnboardingController::class, 'registerMainMembers']);
         Route::post('/create-cycle', [VslaOnboardingController::class, 'createSavingsCycle']);

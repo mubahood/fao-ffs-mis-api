@@ -785,6 +785,74 @@ class VslaOnboardingController extends Controller
         return $this->success($data, 'Onboarding status retrieved successfully');
     }
 
+    /**
+     * Update onboarding step for logged-in user
+     * 
+     * Allows the mobile app to sync the current onboarding step progress.
+     * Updates the onboarding_step and last_onboarding_step_at fields.
+     * If step is 'step_7_complete', also updates onboarding_completed_at.
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateOnboardingStep(Request $request)
+    {
+        // Get user from middleware (EnsureTokenIsValid)
+        $user = $request->userModel ?? auth('api')->user();
+        
+        if (!$user) {
+            return $this->error('You must be logged in');
+        }
+
+        // Validate request
+        $validator = Validator::make($request->all(), [
+            'onboarding_step' => 'required|string|in:not_started,step_1_welcome,step_2_terms,step_3_registration,step_4_group,step_5_members,step_6_cycle,step_7_complete',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error('Validation failed', $validator->errors());
+        }
+
+        try {
+            $step = $request->input('onboarding_step');
+            
+            // Validate step progression (optional - allows skipping for flexibility)
+            // This ensures logical flow but allows resuming from any step
+            $validSteps = [
+                'not_started' => 0,
+                'step_1_welcome' => 1,
+                'step_2_terms' => 2,
+                'step_3_registration' => 3,
+                'step_4_group' => 4,
+                'step_5_members' => 5,
+                'step_6_cycle' => 6,
+                'step_7_complete' => 7,
+            ];
+            
+            // Update onboarding step
+            $user->onboarding_step = $step;
+            $user->last_onboarding_step_at = Carbon::now();
+            
+            // If completing onboarding, set completion timestamp
+            if ($step === 'step_7_complete') {
+                $user->onboarding_completed_at = Carbon::now();
+            }
+            
+            $user->save();
+
+            return $this->success([
+                'current_step' => $user->onboarding_step,
+                'is_complete' => $user->onboarding_step === 'step_7_complete',
+                'completed_at' => $user->onboarding_completed_at,
+                'last_step_at' => $user->last_onboarding_step_at,
+                'step_number' => $validSteps[$step] ?? 0,
+            ], 'Onboarding step updated successfully');
+
+        } catch (\Exception $e) {
+            return $this->error('Failed to update onboarding step: ' . $e->getMessage());
+        }
+    }
+
     // ========== HELPER METHODS ==========
 
     /**
