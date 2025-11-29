@@ -76,15 +76,16 @@ class VslaOnboardingController extends Controller
     }
 
     /**
-     * STEP 3: Register Group Admin
+     * STEP 3: Update Chairperson Profile
      * 
-     * Creates a new user account and marks them as a group admin.
-     * Automatically logs them in after registration.
+     * Updates an existing verified user account with chairperson details.
+     * User must already exist from OTP phone verification.
+     * This is NOT creating a new user - it's updating an existing one.
      * 
      * Required fields:
      * - name: Full name
-     * - phone_number: Uganda phone number
-     * - password: Password
+     * - phone_number: Uganda phone number (must match verified phone)
+     * - password: Password to set
      * - password_confirmation: Password confirmation
      * 
      * Optional fields:
@@ -102,10 +103,9 @@ class VslaOnboardingController extends Controller
             'phone_number' => [
                 'required',
                 'string',
-                'regex:/^(\+256|0)[7][0-9]{8}$/',
-                'unique:users,phone_number'
+                'regex:/^(\+256|0)[7][0-9]{8}$/'
             ],
-            'email' => 'nullable|email|unique:users,email',
+            'email' => 'nullable|email',
             'password' => 'required|string|min:4|confirmed',
             'country' => 'nullable|string',
         ]);
@@ -125,13 +125,39 @@ class VslaOnboardingController extends Controller
                 $phoneNumber = '+256' . $phoneNumber;
             }
 
-            // Create user
-            $user = new User();
+            // FIND EXISTING USER - NOT CREATE
+            // Check all possible phone formats: +256783204665, 0783204665, 783204665
+            $phoneVariant1 = $phoneNumber; // +256783204665
+            $phoneVariant2 = '0' . substr($phoneNumber, 4); // 0783204665
+            $phoneVariant3 = substr($phoneNumber, 4); // 783204665
+            
+            $user = User::where('phone_number', $phoneVariant1)
+                ->orWhere('phone_number', $phoneVariant2)
+                ->orWhere('phone_number', $phoneVariant3)
+                ->first();
+
+            if (!$user) {
+                DB::rollBack();
+                return $this->error('User account not found. Please complete phone verification via OTP first.');
+            }
+            
+            // Security check: ensure user hasn't already completed onboarding
+            if ($user->onboarding_step === 'step_7_complete') {
+                DB::rollBack();
+                return $this->error('This account has already completed onboarding. Please login instead.');
+            }
+
+            // UPDATE EXISTING USER (not creating new)
             $user->name = $request->name;
             $user->first_name = $request->name;
             $user->phone_number = $phoneNumber;
             $user->username = $phoneNumber;
-            $user->email = $request->email ?? '';
+            
+            // Only update email if provided
+            if ($request->filled('email')) {
+                $user->email = $request->email;
+            }
+            
             $user->password = Hash::make($request->password);
             $user->country = $request->country ?? 'Uganda';
             $user->user_type = 'Customer';
@@ -142,7 +168,7 @@ class VslaOnboardingController extends Controller
             $user->onboarding_step = 'step_3_registration';
             $user->last_onboarding_step_at = Carbon::now();
             
-            $user->save();
+            $user->saveQuietly();
 
             // Generate token for auto-login with long expiry
             JWTAuth::factory()->setTTL(60 * 24 * 30 * 365);
@@ -161,7 +187,7 @@ class VslaOnboardingController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->error('Registration failed: ' . $e->getMessage());
+            return $this->error('Update failed: ' . $e->getMessage());
         }
     }
 
@@ -186,29 +212,66 @@ class VslaOnboardingController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    /**
+     * STEP 4: Create or Update VSLA Group
+     * 
+     * Creates a new VSLA group or updates existing one for the chairperson.
+     * 
+     * SECURITY VALIDATIONS:
+     * 1. User must be logged in and registered in system
+     * 2. User must be marked as chairperson (is_group_admin = 'Yes')
+     * 3. User must have completed Step 3 (profile setup)
+     * 
+     * LOGIC:
+     * - If user already has group_id → Find that group and UPDATE it
+     * - If user has no group_id → CREATE new group
+     * - Links group to user automatically
+     * 
+     * Required fields:
+     * - name: Group name
+     * - description: Group description
+     * - meeting_frequency: Weekly, Bi-weekly, or Monthly
+     * - establishment_date: When group was established
+     * - district_id: District ID
+     * - estimated_members: Estimated number of members
+     * 
+     * Optional fields:
+     * - subcounty_text: Subcounty name
+     * - parish_text: Parish name
+     * - village: Village name
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createVslaGroup(Request $request)
     {
-        // Get user from middleware (EnsureTokenIsValid)
+        // ========== SECURITY VALIDATIONS ==========
+        
+        // VALIDATION 1: User must be authenticated
         $user = $request->userModel ?? auth('api')->user();
         
         if (!$user) {
-            return $this->error('You must be logged in to create a group');
+            return $this->error('Authentication required. Please log in to continue.');
         }
 
+        // VALIDATION 2: User must be registered (not just OTP verified)
+        if (empty($user->name) || empty($user->password)) {
+            return $this->error('Profile incomplete. Please complete Step 3 (registration) first.');
+        }
+
+        // VALIDATION 3: User must be marked as chairperson
         if ($user->is_group_admin !== 'Yes') {
-            return $this->error('Only group admins can create VSLA groups');
+            return $this->error('Access denied. Only registered chairpersons can create VSLA groups.');
         }
 
-        // Check if user already has a group
-        $existingGroup = FfsGroup::where('admin_id', $user->id)
-            ->where('status', 'Active')
-            ->first();
+        // VALIDATION 4: User must have completed Step 3
+        $allowedSteps = ['step_3_registration', 'step_4_group'];
+        if (!in_array($user->onboarding_step, $allowedSteps)) {
+            return $this->error('Please complete your profile registration (Step 3) before creating a group.');
+        }
+
+        // ========== INPUT VALIDATION ==========
         
-        if ($existingGroup) {
-            return $this->error('You already have an active VSLA group: ' . $existingGroup->name);
-        }
-
-        // Validation
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:3|max:255',
             'description' => 'required|string|min:10',
@@ -228,46 +291,75 @@ class VslaOnboardingController extends Controller
         DB::beginTransaction();
         
         try {
-            // Generate unique group code
-            $district = Location::find($request->district_id);
-            $districtCode = strtoupper(substr($district->name, 0, 3));
-            $year = date('y');
-            
-            // Get last group code for this district
-            $lastGroup = FfsGroup::where('code', 'like', "$districtCode-VSLA-$year-%")
-                ->orderBy('code', 'desc')
-                ->first();
-            
-            if ($lastGroup && preg_match('/-(\d{4})$/', $lastGroup->code, $matches)) {
-                $nextNumber = intval($matches[1]) + 1;
-            } else {
-                $nextNumber = 1;
-            }
-            
-            $groupCode = sprintf('%s-VSLA-%s-%04d', $districtCode, $year, $nextNumber);
+            $isUpdate = false;
+            $group = null;
 
-            // Create group
-            $group = new FfsGroup();
+            // ========== CHECK: UPDATE OR CREATE? ==========
+            
+            // If user has group_id, try to find and update that group
+            if (!empty($user->group_id)) {
+                $group = FfsGroup::where('id', $user->group_id)
+                    ->where('admin_id', $user->id)
+                    ->first();
+                
+                if ($group) {
+                    // GROUP FOUND - UPDATE MODE
+                    $isUpdate = true;
+                } else {
+                    // Group ID exists but group not found or user doesn't own it
+                    $user->group_id = null;
+                }
+            }
+
+            // ========== CREATE NEW GROUP (if not updating) ==========
+            
+            if (!$group) {
+                $group = new FfsGroup();
+                
+                // Generate unique group code: DISTRICT-VSLA-YEAR-NUMBER
+                $district = Location::find($request->district_id);
+                $districtCode = strtoupper(substr($district->name, 0, 3));
+                $year = date('y');
+                
+                // Get last group code for this district
+                $lastGroup = FfsGroup::where('code', 'like', "$districtCode-VSLA-$year-%")
+                    ->orderBy('code', 'desc')
+                    ->first();
+                
+                if ($lastGroup && preg_match('/-(\\d{4})$/', $lastGroup->code, $matches)) {
+                    $nextNumber = intval($matches[1]) + 1;
+                } else {
+                    $nextNumber = 1;
+                }
+                
+                $groupCode = sprintf('%s-VSLA-%s-%04d', $districtCode, $year, $nextNumber);
+                
+                // Set initial fields for new group
+                $group->code = $groupCode;
+                $group->type = 'VSLA';
+                $group->registration_date = Carbon::now();
+                $group->admin_id = $user->id;
+                $group->created_by_id = $user->id;
+                $group->facilitator_id = $user->id;
+            }
+
+            // ========== UPDATE GROUP FIELDS (both create and update) ==========
+            
             $group->name = $request->name;
-            $group->type = 'VSLA';
-            $group->code = $groupCode;
             $group->description = $request->description;
             $group->meeting_frequency = $request->meeting_frequency;
             $group->establishment_date = $request->establishment_date;
-            $group->registration_date = Carbon::now();
             $group->district_id = $request->district_id;
             $group->subcounty_text = $request->subcounty_text;
             $group->parish_text = $request->parish_text;
             $group->village = $request->village;
             $group->estimated_members = $request->estimated_members;
             $group->status = 'Active';
-            $group->admin_id = $user->id;
-            $group->created_by_id = $user->id;
-            $group->facilitator_id = $user->id; // Admin is also facilitator initially
             
             $group->save();
 
-            // Update user's onboarding step and link to group
+            // ========== UPDATE USER'S ONBOARDING STATUS ==========
+            
             $user->onboarding_step = 'step_4_group';
             $user->last_onboarding_step_at = Carbon::now();
             $user->group_id = $group->id;
@@ -276,16 +368,25 @@ class VslaOnboardingController extends Controller
 
             DB::commit();
 
+            // ========== RETURN SUCCESS RESPONSE ==========
+            
+            $message = $isUpdate 
+                ? 'VSLA group updated successfully!' 
+                : 'VSLA group created successfully!';
+
             return $this->success([
                 'group' => $group,
-                'user' => $user
-            ], 'VSLA group created successfully!');
+                'user' => $user,
+                'is_update' => $isUpdate,
+                'action' => $isUpdate ? 'updated' : 'created'
+            ], $message);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->error('Failed to create group: ' . $e->getMessage());
+            return $this->error('Failed to process group: ' . $e->getMessage());
         }
     }
+
 
     /**
      * STEP 5: Register Main Members (Secretary & Treasurer)
@@ -503,7 +604,7 @@ class VslaOnboardingController extends Controller
             'weekly_loan_interest_rate' => 'required_if:interest_frequency,Weekly|nullable|numeric|min:0|max:100',
             'monthly_loan_interest_rate' => 'required_if:interest_frequency,Monthly|nullable|numeric|min:0|max:100',
             'minimum_loan_amount' => 'required|numeric|min:1000',
-            'maximum_loan_multiple' => 'required|integer|min:5|max:30',
+            'maximum_loan_multiple' => 'required|integer|min:3|max:30',
             'late_payment_penalty' => 'required|numeric|min:0|max:50',
         ]);
 

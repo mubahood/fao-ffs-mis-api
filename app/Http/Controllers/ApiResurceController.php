@@ -3503,7 +3503,7 @@ class ApiResurceController extends Controller
     {
         try {
             // Get authenticated user
-            $user = $request->user();
+            $user = $request->userModel ?? $request->user();
             
             if (!$user) {
                 $user_id = $request->input('user_id');
@@ -3555,7 +3555,7 @@ class ApiResurceController extends Controller
     {
         try {
             // Try multiple ways to get the user
-            $user = $request->user();
+            $user = $request->userModel ?? $request->user();
             
             if (!$user) {
                 // Try from User-Id header
@@ -3628,7 +3628,7 @@ class ApiResurceController extends Controller
     {
         try {
             // Try multiple ways to get the user
-            $user = $request->user();
+            $user = $request->userModel ?? $request->user();
             
             if (!$user) {
                 // Try from User-Id header
@@ -3808,7 +3808,7 @@ class ApiResurceController extends Controller
     {
         try {
             // Try multiple ways to get the user
-            $user = $request->user();
+            $user = $request->userModel ?? $request->user();
             
             if (!$user) {
                 // Try from User-Id header
