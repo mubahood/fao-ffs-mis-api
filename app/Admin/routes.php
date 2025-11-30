@@ -126,4 +126,23 @@ Route::group([
     $router->get('ffs-members/{id}/send-credentials', 'MemberController@sendCredentials')->name('ffs-members.send-credentials');
     $router->get('ffs-members/{id}/send-welcome', 'MemberController@sendWelcome')->name('ffs-members.send-welcome');
     $router->resource('ffs-members', MemberController::class);
+
+    // ========================================
+    // ADVISORY MODULE - Knowledge Management
+    // ========================================
+    
+    // Advisory Categories - Organize articles by topic
+    $router->resource('advisory-categories', AdvisoryCategoryController::class);
+    
+    // Advisory Posts/Articles - Educational content with multimedia
+    $router->resource('advisory-posts', AdvisoryPostController::class);
+    
+    // Farmer Questions - Q&A from mobile app users
+    $router->resource('farmer-questions', FarmerQuestionController::class);
+    
+    // Farmer Question Answers - Moderation & approval
+    // NOTE: Specific routes MUST come before resource route
+    $router->get('farmer-question-answers/{id}/approve', 'FarmerQuestionAnswerController@approve')->name('farmer-question-answers.approve');
+    $router->get('farmer-question-answers/{id}/accept', 'FarmerQuestionAnswerController@accept')->name('farmer-question-answers.accept');
+    $router->resource('farmer-question-answers', FarmerQuestionAnswerController::class);
 });

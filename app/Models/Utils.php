@@ -834,10 +834,58 @@ class Utils extends Model
         return $is_single_file ? $single_file : $uploaded_images;
     }
 
+    /**
+     * Centralized media file uploader
+     * Uploads any media file (image, audio, video, pdf, etc.) to public/storage/images/
+     * Returns only the filename (not the full path) for storage in database
+     * 
+     * @param \Illuminate\Http\UploadedFile $file - The uploaded file
+     * @param array $allowedExtensions - Optional array of allowed extensions ['jpg', 'png', 'pdf']
+     * @param int $maxSizeMB - Optional max file size in MB (default 10MB)
+     * @return string|null - Returns filename on success, null on failure
+     * 
+     * Example usage:
+     * $filename = Utils::uploadMedia($request->file('image'), ['jpg', 'png'], 5);
+     * if ($filename) {
+     *     $model->image_url = $filename; // Store only filename
+     * }
+     * 
+     * On frontend, use: Utils.img($filename) which will prepend base_url/images/
+     */
+    public static function uploadMedia($file, $allowedExtensions = null, $maxSizeMB = 10)
+    {
+        try {
+            if (!$file || !$file->isValid()) {
+                return null;
+            }
 
+            // Validate extension if specified
+            $ext = strtolower($file->getClientOriginalExtension());
+            if ($allowedExtensions !== null && !in_array($ext, $allowedExtensions)) {
+                throw new \Exception("File type .{$ext} not allowed");
+            }
 
+            // Validate file size
+            $maxSizeBytes = $maxSizeMB * 1024 * 1024;
+            if ($file->getSize() > $maxSizeBytes) {
+                throw new \Exception("File size exceeds {$maxSizeMB}MB limit");
+            }
 
+            // Generate unique filename
+            $file_name = time() . "-" . rand(100000, 1000000) . "." . $ext;
+            
+            // Upload to public/storage/images/ directory
+            $destination = Utils::docs_root() . '/storage/images/';
+            $file->move($destination, $file_name);
 
+            // Return only the filename (not storage/images/filename)
+            return $file_name;
+            
+        } catch (\Exception $e) {
+            // Log error if needed
+            return null;
+        }
+    }
 
     public static function checkEventRegustration()
     {

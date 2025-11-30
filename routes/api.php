@@ -208,6 +208,36 @@ Route::prefix('admin/pesapal')->middleware(EnsureTokenIsValid::class)->group(fun
 });
 
 // ========================================
+// ADVISORY MODULE ROUTES (Articles & Farmer Questions)
+// ========================================
+use App\Http\Controllers\Api\AdvisoryController;
+use App\Http\Controllers\Api\FarmerQuestionController;
+
+Route::prefix('advisory')->group(function () {
+    // Advisory Articles (Public Access)
+    Route::get('/categories', [AdvisoryController::class, 'getCategories']);
+    Route::get('/posts', [AdvisoryController::class, 'getPosts']);
+    Route::get('/posts/featured', [AdvisoryController::class, 'getFeaturedPosts']);
+    Route::get('/posts/category', [AdvisoryController::class, 'getPostsByCategory']);
+    Route::get('/posts/search', [AdvisoryController::class, 'searchPosts']);
+    Route::get('/posts/{id}', [AdvisoryController::class, 'getPost']);
+    Route::post('/posts/{id}/like', [AdvisoryController::class, 'likePost']);
+    
+    // Farmer Questions (Public Read, Auth Required for Write)
+    Route::get('/questions', [FarmerQuestionController::class, 'getQuestions']);
+    Route::get('/questions/{id}', [FarmerQuestionController::class, 'getQuestion']);
+    
+    // Protected Routes (Authentication Required)
+    Route::middleware(EnsureTokenIsValid::class)->group(function () {
+        Route::get('/questions/my/list', [FarmerQuestionController::class, 'getMyQuestions']);
+        Route::post('/questions', [FarmerQuestionController::class, 'postQuestion']);
+        Route::post('/questions/{id}/answers', [FarmerQuestionController::class, 'postAnswer']);
+        Route::post('/questions/{id}/like', [FarmerQuestionController::class, 'likeQuestion']);
+        Route::post('/answers/{id}/like', [FarmerQuestionController::class, 'likeAnswer']);
+    });
+});
+
+// ========================================
 // UNIVERSAL PAYMENT SYSTEM ROUTES
 // ========================================
 use App\Http\Controllers\UniversalPaymentController;
