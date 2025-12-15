@@ -207,55 +207,134 @@ class VslaMeetingController extends Controller
     }
 
     /**
-     * Get list of meetings (paginated)
-     * GET /api/vsla-meetings
+     * Get list of meetings
+     * GET /api/vsla-meetings or /api/vsla/meetings
      */
     public function index(Request $request)
     {
         try {
-            $query = VslaMeeting::with(['cycle', 'group', 'creator']);
+            $user = Auth::user();
+            
+            $query = VslaMeeting::with(['cycle', 'group', 'creator'])
+                ->where('processing_status', 'completed'); // Only show completed meetings
+
+            // Filter by current user's group if they are not an admin
+            if (!$user->isAdmin()) {
+                // Get user's VSLA group
+                $userGroup = $user->group_id ?? null;
+                if ($userGroup) {
+                    $query->where('group_id', $userGroup);
+                } else {
+                    // User has no group, return empty result
+                    return response()->json([
+                        'code' => 1,
+                        'message' => 'Meetings retrieved successfully',
+                        'data' => [],
+                    ]);
+                }
+            }
 
             // Filter by cycle
             if ($request->has('cycle_id')) {
                 $query->where('cycle_id', $request->cycle_id);
             }
 
-            // Filter by group
-            if ($request->has('group_id')) {
+            // Filter by group (admin only)
+            if ($request->has('group_id') && $user->isAdmin()) {
                 $query->where('group_id', $request->group_id);
             }
 
-            // Filter by processing status
-            if ($request->has('processing_status')) {
-                $query->where('processing_status', $request->processing_status);
+            // Filter by status
+            if ($request->has('status')) {
+                $status = strtolower($request->status);
+                if ($status === 'completed') {
+                    $query->where('processing_status', 'completed')
+                          ->where('has_errors', false);
+                } elseif ($status === 'cancelled') {
+                    // Add cancelled logic if needed
+                    $query->where('has_errors', true);
+                }
             }
 
-            // Filter by date range
-            if ($request->has('start_date')) {
-                $query->where('meeting_date', '>=', $request->start_date);
+            // Search functionality
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('meeting_number', 'like', "%{$search}%")
+                      ->orWhere('notes', 'like', "%{$search}%")
+                      ->orWhereHas('creator', function ($q) use ($search) {
+                          $q->where('name', 'like', "%{$search}%");
+                      });
+                });
             }
-            if ($request->has('end_date')) {
-                $query->where('meeting_date', '<=', $request->end_date);
-            }
 
-            // Order by date and meeting number
-            $query->orderBy('meeting_date', 'desc')
-                  ->orderBy('meeting_number', 'desc');
+            // Sorting
+            $sortBy = $request->sort_by ?? 'meeting_date';
+            $sortOrder = $request->sort_order ?? 'desc';
+            
+            // Map frontend sort fields to database fields
+            $sortFieldMap = [
+                'meeting_date' => 'meeting_date',
+                'meeting_number' => 'meeting_number',
+                'total_savings' => 'total_savings_collected',
+            ];
 
-            $meetings = $query->paginate($request->per_page ?? 20);
+            $dbSortField = $sortFieldMap[$sortBy] ?? 'meeting_date';
+            $query->orderBy($dbSortField, $sortOrder);
 
-            return $this->success('Meetings retrieved successfully', [
-                'meetings' => $meetings
+            // Get all meetings (no pagination - keep it simple)
+            $meetings = $query->get();
+
+            // Transform data to match mobile app expectations
+            $transformedData = $meetings->map(function ($meeting) {
+                return [
+                    'id' => $meeting->id,
+                    'cycle_id' => $meeting->cycle_id,
+                    'cycle_name' => $meeting->cycle->name ?? null,
+                    'meeting_number' => $meeting->meeting_number,
+                    'meeting_date' => $meeting->meeting_date->format('Y-m-d'),
+                    'location' => $meeting->notes ?? 'N/A', // Using notes as location for now
+                    'status' => $meeting->has_errors ? 'cancelled' : 'completed',
+                    'chairperson_id' => null, // Not stored in current schema
+                    'chairperson_name' => null,
+                    'secretary_id' => null,
+                    'secretary_name' => null,
+                    'treasurer_id' => null,
+                    'treasurer_name' => null,
+                    'total_attendees' => $meeting->members_present,
+                    'total_absentees' => $meeting->members_absent,
+                    'total_savings' => (float) $meeting->total_savings_collected,
+                    'total_fines' => (float) $meeting->total_fines_collected,
+                    'total_welfare' => (float) $meeting->total_welfare_collected,
+                    'total_loans_issued' => (float) $meeting->total_loans_disbursed,
+                    'total_loans_repaid' => 0.0, // Not stored in current schema
+                    'cash_at_hand' => (float) $meeting->net_cash_flow,
+                    'notes' => $meeting->notes,
+                    'submitted_by' => $meeting->creator->name ?? null,
+                    'submitted_at' => $meeting->created_at?->format('Y-m-d H:i:s'),
+                    'created_at' => $meeting->created_at?->format('Y-m-d H:i:s'),
+                    'updated_at' => $meeting->updated_at?->format('Y-m-d H:i:s'),
+                ];
+            })->values()->toArray();
+
+            return response()->json([
+                'code' => 1,
+                'message' => 'Meetings retrieved successfully',
+                'data' => $transformedData,
             ]);
 
         } catch (\Exception $e) {
-            return $this->error('Failed to retrieve meetings: ' . $e->getMessage(), 500);
+            return response()->json([
+                'code' => 0,
+                'message' => 'Failed to retrieve meetings: ' . $e->getMessage(),
+                'data' => [],
+            ], 500);
         }
     }
 
     /**
      * Get single meeting details
-     * GET /api/vsla-meetings/{id}
+     * GET /api/vsla-meetings/{id} or /api/vsla/meetings/{id}
      */
     public function show($id)
     {
@@ -271,52 +350,127 @@ class VslaMeetingController extends Controller
             ])->find($id);
 
             if (!$meeting) {
-                return $this->error('Meeting not found', 404);
+                return response()->json([
+                    'code' => 0,
+                    'message' => 'Meeting not found',
+                    'data' => null,
+                ], 404);
             }
 
-            return $this->success('Meeting details retrieved successfully', [
-                'meeting' => $meeting
+            // Check access permission
+            $user = Auth::user();
+            if (!$user->isAdmin() && $meeting->group_id !== $user->group_id) {
+                return response()->json([
+                    'code' => 0,
+                    'message' => 'You do not have permission to view this meeting',
+                    'data' => null,
+                ], 403);
+            }
+
+            // Transform data to match mobile app expectations
+            $transformedData = [
+                'id' => $meeting->id,
+                'cycle_id' => $meeting->cycle_id,
+                'cycle_name' => $meeting->cycle->name ?? null,
+                'meeting_number' => $meeting->meeting_number,
+                'meeting_date' => $meeting->meeting_date->format('Y-m-d'),
+                'location' => $meeting->notes ?? 'N/A',
+                'status' => $meeting->has_errors ? 'cancelled' : 'completed',
+                'chairperson_id' => null,
+                'chairperson_name' => null,
+                'secretary_id' => null,
+                'secretary_name' => null,
+                'treasurer_id' => null,
+                'treasurer_name' => null,
+                'total_attendees' => $meeting->members_present,
+                'total_absentees' => $meeting->members_absent,
+                'total_savings' => (float) $meeting->total_savings_collected,
+                'total_fines' => (float) $meeting->total_fines_collected,
+                'total_welfare' => (float) $meeting->total_welfare_collected,
+                'total_loans_issued' => (float) $meeting->total_loans_disbursed,
+                'total_loans_repaid' => 0.0,
+                'cash_at_hand' => (float) $meeting->net_cash_flow,
+                'notes' => $meeting->notes,
+                'submitted_by' => $meeting->creator->name ?? null,
+                'submitted_at' => $meeting->created_at?->format('Y-m-d H:i:s'),
+                'created_at' => $meeting->created_at?->format('Y-m-d H:i:s'),
+                'updated_at' => $meeting->updated_at?->format('Y-m-d H:i:s'),
+            ];
+
+            return response()->json([
+                'code' => 1,
+                'message' => 'Meeting details retrieved successfully',
+                'data' => $transformedData,
             ]);
 
         } catch (\Exception $e) {
-            return $this->error('Failed to retrieve meeting: ' . $e->getMessage(), 500);
+            return response()->json([
+                'code' => 0,
+                'message' => 'Failed to retrieve meeting: ' . $e->getMessage(),
+                'data' => null,
+            ], 500);
         }
     }
 
     /**
      * Get meeting statistics
-     * GET /api/vsla-meetings/stats
+     * GET /api/vsla-meetings/stats or /api/vsla/meetings/stats
      */
     public function stats(Request $request)
     {
         try {
+            $user = Auth::user();
             $query = VslaMeeting::query();
+
+            // Filter by current user's group if they are not an admin
+            if (!$user->isAdmin()) {
+                $userGroup = $user->group_id ?? null;
+                if ($userGroup) {
+                    $query->where('group_id', $userGroup);
+                } else {
+                    // User has no group, return empty stats
+                    return response()->json([
+                        'code' => 1,
+                        'message' => 'Meeting statistics retrieved successfully',
+                        'data' => [
+                            'total_meetings' => 0,
+                            'total_savings' => 0.0,
+                            'completed_meetings' => 0,
+                            'cancelled_meetings' => 0,
+                        ],
+                    ]);
+                }
+            }
 
             // Filter by cycle if provided
             if ($request->has('cycle_id')) {
                 $query->where('cycle_id', $request->cycle_id);
             }
 
-            // Filter by group if provided
-            if ($request->has('group_id')) {
+            // Filter by group if provided (admin only)
+            if ($request->has('group_id') && $user->isAdmin()) {
                 $query->where('group_id', $request->group_id);
             }
 
             $stats = [
-                'total_meetings' => (clone $query)->count(),
-                'pending' => (clone $query)->where('processing_status', 'pending')->count(),
-                'processing' => (clone $query)->where('processing_status', 'processing')->count(),
-                'completed' => (clone $query)->where('processing_status', 'completed')->count(),
-                'failed' => (clone $query)->where('processing_status', 'failed')->count(),
-                'needs_review' => (clone $query)->where('processing_status', 'needs_review')->count(),
-                'with_errors' => (clone $query)->where('has_errors', true)->count(),
-                'with_warnings' => (clone $query)->where('has_warnings', true)->count(),
+                'total_meetings' => (clone $query)->where('processing_status', 'completed')->count(),
+                'total_savings' => (clone $query)->where('processing_status', 'completed')->sum('total_savings_collected'),
+                'completed_meetings' => (clone $query)->where('processing_status', 'completed')->where('has_errors', false)->count(),
+                'cancelled_meetings' => (clone $query)->where('has_errors', true)->count(),
             ];
 
-            return $this->success('Meeting statistics retrieved successfully', $stats);
+            return response()->json([
+                'code' => 1,
+                'message' => 'Meeting statistics retrieved successfully',
+                'data' => $stats,
+            ]);
 
         } catch (\Exception $e) {
-            return $this->error('Failed to retrieve statistics: ' . $e->getMessage(), 500);
+            return response()->json([
+                'code' => 0,
+                'message' => 'Failed to retrieve statistics: ' . $e->getMessage(),
+                'data' => null,
+            ], 500);
         }
     }
 
@@ -367,28 +521,100 @@ class VslaMeetingController extends Controller
 
     /**
      * Delete a meeting (admin only, pending meetings only)
-     * DELETE /api/vsla-meetings/{id}
+     * DELETE /api/vsla-meetings/{id} or /api/vsla/meetings/{id}
      */
     public function destroy($id)
     {
         try {
+            $user = Auth::user();
+            
+            // Check if user is admin
+            if (!$user->isAdmin()) {
+                return response()->json([
+                    'code' => 0,
+                    'message' => 'Only administrators can delete meetings',
+                ], 403);
+            }
+
             $meeting = VslaMeeting::find($id);
 
             if (!$meeting) {
-                return $this->error('Meeting not found', 404);
+                return response()->json([
+                    'code' => 0,
+                    'message' => 'Meeting not found',
+                ], 404);
             }
 
             // Only allow deletion of pending meetings
             if ($meeting->processing_status !== 'pending') {
-                return $this->error('Only pending meetings can be deleted', 422);
+                return response()->json([
+                    'code' => 0,
+                    'message' => 'Only pending meetings can be deleted',
+                ], 422);
             }
 
             $meeting->delete();
 
-            return $this->success('Meeting deleted successfully');
+            return response()->json([
+                'code' => 1,
+                'message' => 'Meeting deleted successfully',
+            ]);
 
         } catch (\Exception $e) {
-            return $this->error('Failed to delete meeting: ' . $e->getMessage(), 500);
+            return response()->json([
+                'code' => 0,
+                'message' => 'Failed to delete meeting: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Export meeting to PDF
+     * GET /api/vsla/meetings/{id}/export-pdf
+     */
+    public function exportPdf($id)
+    {
+        try {
+            $meeting = VslaMeeting::with([
+                'cycle',
+                'group',
+                'creator',
+                'attendance.member'
+            ])->find($id);
+
+            if (!$meeting) {
+                return response()->json([
+                    'code' => 0,
+                    'message' => 'Meeting not found',
+                ], 404);
+            }
+
+            // Check access permission
+            $user = Auth::user();
+            if (!$user->isAdmin() && $meeting->group_id !== $user->group_id) {
+                return response()->json([
+                    'code' => 0,
+                    'message' => 'You do not have permission to export this meeting',
+                ], 403);
+            }
+
+            // Return PDF URL or generate PDF
+            // For now, return success with PDF generation info
+            return response()->json([
+                'code' => 1,
+                'message' => 'PDF export functionality coming soon',
+                'data' => [
+                    'meeting_id' => $meeting->id,
+                    'meeting_number' => $meeting->meeting_number,
+                    'pdf_url' => null, // Will be implemented later
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 0,
+                'message' => 'Failed to export PDF: ' . $e->getMessage(),
+            ], 500);
         }
     }
 

@@ -146,6 +146,7 @@ Route::prefix('vsla')->middleware(EnsureTokenIsValid::class)->group(function () 
 // VSLA MEETINGS - Critical for offline meeting submission/sync
 // ========================================
 use App\Http\Controllers\Api\VslaMeetingController;
+use App\Http\Controllers\Api\AttendanceController;
 
 Route::prefix('vsla-meetings')->middleware(EnsureTokenIsValid::class)->group(function () {
     Route::post('/submit', [VslaMeetingController::class, 'submit']); // Submit offline meeting from mobile app
@@ -154,6 +155,27 @@ Route::prefix('vsla-meetings')->middleware(EnsureTokenIsValid::class)->group(fun
     Route::get('/{id}', [VslaMeetingController::class, 'show']); // Get single meeting details
     Route::put('/{id}/reprocess', [VslaMeetingController::class, 'reprocess']); // Reprocess failed meeting
     Route::delete('/{id}', [VslaMeetingController::class, 'destroy']); // Delete pending meeting (admin only)
+});
+
+// VSLA MEETINGS - Alternative route prefix for mobile app compatibility
+Route::prefix('vsla/meetings')->middleware(EnsureTokenIsValid::class)->group(function () {
+    Route::post('/submit', [VslaMeetingController::class, 'submit']); // Submit offline meeting from mobile app
+    Route::get('/stats', [VslaMeetingController::class, 'stats']); // Get meeting statistics
+    Route::get('/', [VslaMeetingController::class, 'index']); // List all meetings (paginated)
+    Route::get('/{id}', [VslaMeetingController::class, 'show']); // Get single meeting details
+    Route::get('/{id}/export-pdf', [VslaMeetingController::class, 'exportPdf']); // Export meeting to PDF
+    Route::put('/{id}/reprocess', [VslaMeetingController::class, 'reprocess']); // Reprocess failed meeting
+    Route::delete('/{id}', [VslaMeetingController::class, 'destroy']); // Delete pending meeting (admin only)
+});
+
+// ========================================
+// VSLA ATTENDANCE - Member attendance tracking
+// ========================================
+Route::prefix('vsla/attendance')->middleware(EnsureTokenIsValid::class)->group(function () {
+    Route::get('/', [AttendanceController::class, 'index']); // List attendance records
+    Route::get('/stats', [AttendanceController::class, 'stats']); // Get attendance statistics
+    Route::get('/{id}', [AttendanceController::class, 'show']); // Get single attendance record
+    Route::get('/export-pdf', [AttendanceController::class, 'exportPdf']); // Export to PDF
 });
 
 // ========================================
