@@ -10156,3 +10156,23 @@ Download the app from Play Store or contact your administrator."}
 [2025-12-15 08:21:27] local.INFO: EnsureTokenIsValid - About to check if user is null  
 [2025-12-15 08:21:27] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
 [2025-12-15 08:21:27] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-12-26 16:06:20] local.INFO: EnsureTokenIsValid - User ID: 7  
+[2025-12-26 16:06:20] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-12-26 16:06:20] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-12-26 16:06:20] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-12-26 16:06:20] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-12-26 16:06:27] local.INFO: EnsureTokenIsValid - User ID: 7  
+[2025-12-26 16:06:27] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-12-26 16:06:27] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-12-26 16:06:27] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-12-26 16:06:27] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-12-26 16:06:32] local.INFO: EnsureTokenIsValid - User ID: 7  
+[2025-12-26 16:06:32] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-12-26 16:06:32] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-12-26 16:06:32] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-12-26 16:06:32] local.INFO: EnsureTokenIsValid - Response received: 200  
+[2025-12-26 16:06:39] local.INFO: EnsureTokenIsValid - User ID: 7  
+[2025-12-26 16:06:39] local.INFO: EnsureTokenIsValid - User lookup result: Found  
+[2025-12-26 16:06:39] local.INFO: EnsureTokenIsValid - About to check if user is null  
+[2025-12-26 16:06:39] local.INFO: EnsureTokenIsValid - Passing to next middleware/controller  
+[2025-12-26 16:06:39] local.INFO: EnsureTokenIsValid - Response received: 200  
